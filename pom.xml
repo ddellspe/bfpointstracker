@@ -12,7 +12,11 @@
     <artifactId>bfpointstracker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Brian Ferentz Live Points Tracker</name>
-    <description>Demo project for Spring Boot</description>
+    <description>
+        Project for putting together a full-stack app that allows for updating of data for
+        tracking the scores for each of Iowa's points throughout the 2023 football season in order
+        to track the progress of Brian Ferentz' contractual 25 points per game average.
+    </description>
     <properties>
         <fmt-maven-plugin.version>2.19</fmt-maven-plugin.version>
         <frontend-maven-plugin.version>1.13.4</frontend-maven-plugin.version>
