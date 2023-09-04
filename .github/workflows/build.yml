@@ -22,7 +22,7 @@ jobs:
       - name: Check Pom Sort
         run: mvn -B sortpom:verify
       - name: Check File Formatting
-        run: mvn -B fmt:check
+        run: mvn -B spotless:check
   run-code-tests:
     needs: check-code-quality
     runs-on: ubuntu-latest
