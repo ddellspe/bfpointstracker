@@ -1,4 +1,3 @@
-import './App.css';
 import { Data } from './utils/Data';
 import { LinearScale, Chart, PointElement, LineElement } from 'chart.js';
 import ScoreChart from './components/ScoreChart';
