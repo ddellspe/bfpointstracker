@@ -12,24 +12,34 @@
     <artifactId>bfpointstracker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Brian Ferentz Live Points Tracker</name>
-    <description>
-        Project for putting together a full-stack app that allows for updating of data for
+    <description>Project for putting together a full-stack app that allows for updating of data for
         tracking the scores for each of Iowa's points throughout the 2023 football season in order
-        to track the progress of Brian Ferentz' contractual 25 points per game average.
-    </description>
+        to track the progress of Brian Ferentz' contractual 25 points per game average.</description>
     <properties>
         <fmt-maven-plugin.version>2.19</fmt-maven-plugin.version>
         <frontend-maven-plugin.version>1.13.4</frontend-maven-plugin.version>
         <frontend-src-dir>${project.basedir}/src/main/app</frontend-src-dir>
         <java.version>17</java.version>
         <jib-maven-plugin.version>3.3.1</jib-maven-plugin.version>
-        <kotlin.version>1.8.22</kotlin.version>
-        <maven-assembly-plugin.version>3.5.0</maven-assembly-plugin.version>
-        <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
+        <kotlin.version>1.9.10</kotlin.version>
+        <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
+        <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
+        <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
+        <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
+        <maven-install-plugin.version>3.1.0</maven-install-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
+        <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
         <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <node.version>v18.17.1</node.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sortpom-maven-plugin.version>3.2.1</sortpom-maven-plugin.version>
+        <spring-boot-maven-plugin.version>3.0.2</spring-boot-maven-plugin.version>
         <versions-maven-plugin.version>2.15.0</versions-maven-plugin.version>
     </properties>
     <dependencyManagement>
@@ -37,7 +47,7 @@
             <dependency>
                 <groupId>com.ninja-squad</groupId>
                 <artifactId>springmockk</artifactId>
-                <version>3.0.1</version>
+                <version>4.0.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -88,9 +98,14 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>com.spotify.fmt</groupId>
-                    <artifactId>fmt-maven-plugin</artifactId>
-                    <version>${fmt-maven-plugin.version}</version>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.ekryd.sortpom</groupId>
+                    <artifactId>sortpom-maven-plugin</artifactId>
+                    <version>${sortpom-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.google.cloud.tools</groupId>
@@ -98,9 +113,9 @@
                     <version>${jib-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-maven-plugin</artifactId>
-                    <version>${kotlin.version}</version>
+                    <groupId>com.spotify.fmt</groupId>
+                    <artifactId>fmt-maven-plugin</artifactId>
+                    <version>${fmt-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -109,26 +124,13 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.github.ekryd.sortpom</groupId>
-                    <artifactId>sortpom-maven-plugin</artifactId>
-                    <version>${sortpom-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${maven-resources-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>versions-maven-plugin</artifactId>
-                    <version>${versions-maven-plugin.version}</version>
-                    <configuration>
-                        <rulesUri>file:///${project.basedir}/src/etc/versions-rules.xml</rulesUri>
-                        <excludeProperties>snaplogic.platform.version,snaplogic.snaps.version</excludeProperties>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -142,54 +144,76 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <version>${frontend-maven-plugin.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-maven</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>3.6.3</version>
+                                    </requireMavenVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${versions-maven-plugin.version}</version>
+                    <configuration>
+                        <rulesUri>file:///${project.basedir}/src/etc/versions-rules.xml</rulesUri>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <version>${kotlin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>com.github.ekryd.sortpom</groupId>
-                <artifactId>sortpom-maven-plugin</artifactId>
-                <configuration>
-                    <createBackupFile>false</createBackupFile>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <ignoreLineSeparators>false</ignoreLineSeparators>
-                    <keepBlankLines>false</keepBlankLines>
-                    <lineSeparator>\n</lineSeparator>
-                    <nrOfIndentSpace>4</nrOfIndentSpace>
-                    <sortDependencies>scope,groupId,artifactId</sortDependencies>
-                    <sortProperties>true</sortProperties>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>format</id>
-                        <goals>
-                            <goal>sort</goal>
-                        </goals>
-                        <phase>validate</phase>
-                    </execution>
-                    <execution>
-                        <id>check-format</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.spotify.fmt</groupId>
-                <artifactId>fmt-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -228,6 +252,87 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>com.github.ekryd.sortpom</groupId>
+                <artifactId>sortpom-maven-plugin</artifactId>
+                <configuration>
+                    <createBackupFile>false</createBackupFile>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <ignoreLineSeparators>false</ignoreLineSeparators>
+                    <keepBlankLines>false</keepBlankLines>
+                    <lineSeparator>\n</lineSeparator>
+                    <nrOfIndentSpace>4</nrOfIndentSpace>
+                    <sortDependencies>scope,groupId,artifactId</sortDependencies>
+                    <sortPlugins>groupId,artifactId</sortPlugins>
+                    <sortProperties>true</sortProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>format</id>
+                        <goals>
+                            <goal>sort</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                    <execution>
+                        <id>check-format</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <configuration>
+                    <container>
+                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+                        <volumes>
+                            <volume>/app/resources/configs/</volume>
+                        </volumes>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                        <labels>
+                            <org.opencontainers.image.source>https://github.com/ddellspe/${project.artifactId}</org.opencontainers.image.source>
+                        </labels>
+                    </container>
+                    <to>
+                        <image>ghcr.io/ddellspe/${project.artifactId}</image>
+                        <tags>
+                            <tag>latest</tag>
+                        </tags>
+                    </to>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify.fmt</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <pushChanges>false</pushChanges>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-resources-plugin.version}</version>
                 <executions>
@@ -250,8 +355,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -279,28 +383,8 @@
                 </dependencies>
             </plugin>
             <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <configuration>
-                    <container>
-                        <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
-                        <volumes>
-                            <volume>/app/resources/configs/</volume>
-                        </volumes>
-                        <ports>
-                            <port>8080</port>
-                        </ports>
-                        <labels>
-                            <org.opencontainers.image.source>https://github.com/ddellspe/${project.artifactId}</org.opencontainers.image.source>
-                        </labels>
-                    </container>
-                    <to>
-                        <image>ghcr.io/ddellspe/${project.artifactId}</image>
-                        <tags>
-                            <tag>latest</tag>
-                        </tags>
-                    </to>
-                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
