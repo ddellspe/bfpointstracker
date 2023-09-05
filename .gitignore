@@ -9,6 +9,10 @@
 # production
 /src/main/app/build
 
+# application configuration
+/src/main/resources/application.yml
+/data
+
 # misc
 .DS_Store
 .env.local
