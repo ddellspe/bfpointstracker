@@ -8,6 +8,7 @@ function ScoreChart({ chartData }) {
         data={chartData}
         options={{
           showLine: true,
+          responsive: true,
           scales: {
             y: {
               min: 0,

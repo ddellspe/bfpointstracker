@@ -1,17 +1,27 @@
 package live.bfpointstracker.app.config
 
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.Customizer
+import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
-import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+@EnableConfigurationProperties(BasicAuthProperties::class)
+class SecurityConfig(val props: BasicAuthProperties) {
+
+  @Autowired private lateinit var authenticationEntryPoint: AppBasicAuthenticationEntryPoint
+
+  @Bean
+  fun userDetailsService(): InMemoryUserDetailsManager {
+    return InMemoryUserDetailsManager(props.getUserDetails())
+  }
 
   @Bean
   fun webSecurityCustomizer(): WebSecurityCustomizer {
@@ -31,20 +41,19 @@ class SecurityConfig {
   }
 
   @Bean
+  @Order(1)
   fun filterChain(http: HttpSecurity): SecurityFilterChain {
     http
+      .cors { customizer -> customizer.disable() }
       .csrf { customizer -> customizer.disable() }
       .authorizeHttpRequests { auth ->
         auth
-          .requestMatchers("/api/scores", "/swagger-ui/**", "/v3/**")
+          .requestMatchers("/api/scores", "/swagger-ui/**", "/v3/**", "/login")
           .permitAll()
           .anyRequest()
           .authenticated()
       }
-      .oauth2Login(Customizer.withDefaults())
-      .sessionManagement { sessions ->
-        sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      }
+      .httpBasic { customizer -> customizer.authenticationEntryPoint(authenticationEntryPoint) }
 
     return http.build()
   }
