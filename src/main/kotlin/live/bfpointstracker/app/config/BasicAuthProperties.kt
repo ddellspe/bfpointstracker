@@ -9,6 +9,14 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories
 class BasicAuthProperties {
   private lateinit var users: Map<String, UserDetail>
 
+  fun getUsers(): Map<String, UserDetail> {
+    return users
+  }
+
+  fun setUsers(users: Map<String, UserDetail>) {
+    this.users = users
+  }
+
   fun getUserDetails(): Set<UserDetails> {
     return users.entries
       .map { entry ->
