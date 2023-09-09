@@ -9,18 +9,26 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
+import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(BasicAuthProperties::class)
-class SecurityConfig(val props: BasicAuthProperties) {
+class SecurityConfig {
 
-  @Autowired private lateinit var authenticationEntryPoint: AppBasicAuthenticationEntryPoint
+  @Autowired private lateinit var props: BasicAuthProperties
 
   @Bean
   fun userDetailsService(): InMemoryUserDetailsManager {
     return InMemoryUserDetailsManager(props.getUserDetails())
+  }
+
+  @Bean
+  fun userAuthenticationErrorHandler(): AuthenticationEntryPoint {
+    val appBasicAuthenticationEntryPoint = AppBasicAuthenticationEntryPoint()
+    appBasicAuthenticationEntryPoint.realmName = "Basic Authentication"
+    return appBasicAuthenticationEntryPoint
   }
 
   @Bean
@@ -53,7 +61,9 @@ class SecurityConfig(val props: BasicAuthProperties) {
           .anyRequest()
           .authenticated()
       }
-      .httpBasic { customizer -> customizer.authenticationEntryPoint(authenticationEntryPoint) }
+      .httpBasic { customizer ->
+        customizer.authenticationEntryPoint(userAuthenticationErrorHandler())
+      }
 
     return http.build()
   }

@@ -5,9 +5,7 @@ import jakarta.servlet.http.HttpServletResponse
 import java.io.PrintWriter
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
-import org.springframework.stereotype.Component
 
-@Component
 class AppBasicAuthenticationEntryPoint : BasicAuthenticationEntryPoint() {
 
   override fun commence(
