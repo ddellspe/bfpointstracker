@@ -26,7 +26,7 @@ function compareScores(leftScore, rightScore) {
 }
 
 function processData(rawData) {
-  const sortedScores = rawData.sort(compareScores);
+  const sortedScores = rawData.scores.sort(compareScores);
   var scores = [{time: 0, total: 0}];
   var prevScore = null;
   var runningTotal = 0;
@@ -40,7 +40,9 @@ function processData(rawData) {
       scores.push({time: getTime(score), total: runningTotal});
       prevScore = score;
     }
-    scores.push({time: prevScore.gameNum, total: runningTotal});
+    if(rawData.games.filter(game => game.gameNum === prevScore.gameNum)[0].won !== null) {
+      scores.push({time: prevScore.gameNum, total: runningTotal});
+    }
   } else {
     scores = Data;
   }
@@ -55,15 +57,15 @@ function getTime(score) {
 }
 
 function App() {
-   const [scores, setScores] = useState([]);
+   const [gameData, setGameData] = useState([]);
    const [loading, setLoading] = useState(false);
 
    useEffect(() => {
      setLoading(true);
-     fetch('api/scores')
+     fetch('api/gamedata')
        .then(response => response.json())
        .then(data => {
-         setScores(processData(data));
+         setGameData(processData(data));
          setLoading(false);
        });
    }, []);
@@ -82,7 +84,7 @@ function App() {
   } else {
     const chartData = {
       datasets: [{
-        data: scores.map(data => ({x: data.time, y: data.total})),
+        data: gameData.map(data => ({x: data.time, y: data.total})),
         borderColor: 'rgba(0, 0, 0, 1)',
         pointStyle: false
       },

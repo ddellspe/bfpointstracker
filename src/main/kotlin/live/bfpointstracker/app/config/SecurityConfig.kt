@@ -56,7 +56,7 @@ class SecurityConfig {
       .csrf { customizer -> customizer.disable() }
       .authorizeHttpRequests { auth ->
         auth
-          .requestMatchers("/api/scores", "/swagger-ui/**", "/v3/**", "/login")
+          .requestMatchers("/api/gamedata", "/swagger-ui/**", "/v3/**", "/login")
           .permitAll()
           .anyRequest()
           .authenticated()

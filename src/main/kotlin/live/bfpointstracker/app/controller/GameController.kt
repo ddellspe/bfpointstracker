@@ -34,4 +34,10 @@ class GameController(var gameService: GameService) {
       ResponseEntity(HttpStatus.BAD_REQUEST)
     }
   }
+
+  @GetMapping("/games")
+  fun getScores(): ResponseEntity<List<Game>> {
+    val games: List<Game> = gameService.getAllGames()
+    return ResponseEntity(games, HttpStatus.OK)
+  }
 }
