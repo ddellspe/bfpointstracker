@@ -1,47 +1,19 @@
 import { LinearScale, Chart, PointElement, LineElement } from 'chart.js';
-import { processData } from '../Scores';
 import { Scatter } from "react-chartjs-2";
-import React, { useEffect, useState } from 'react';
 
 Chart.register(LinearScale, PointElement, LineElement);
 
-function fetchData(setScoreData) {
-  fetch('api/gamedata')
-    .then((response) => response.json())
-    .then((data) => {
-      setScoreData(processData(data));
-    })
-    .catch((err) => {
-      return
-    });
-  setTimeout(() => fetchData(setScoreData), 30000);
-}
-
-function ScoreChart() {
-  const [scoreData, setScoreData] = useState([]);
-
-  useEffect(() => {
-    fetchData(setScoreData);
-  }, []);
-  const chartData = {
-    datasets: [{
-      data: scoreData.map(data => ({x: data.time, y: data.total})),
-      borderColor: 'rgba(0, 0, 0, 1)',
-      pointStyle: 'circle',
-      radius: 2
-    },
-    {
-      data: [...Array(13).keys()].map(v => ({x: v, y: (v * 25)})),
-      pointStyle: false,
-      borderColor: 'rgba(255, 0, 0, 0.25)',
-      stepped: 'after'
-    }]
-  };
-  return (
+function ScoreChart({datasets}) {
+  return(
     <div className="container">
+      <div className="row py-2">
+        <div className="col">
+          <h2>Score Progress</h2>
+        </div>
+      </div>
       <div className="chart-container">
         <Scatter
-          data={chartData}
+          data={datasets}
           options={{
             animation: false,
             showLine: true,
@@ -81,11 +53,12 @@ function ScoreChart() {
                   display: false
                 },
                 ticks: {
-                  display: false
+                  display: true,
+                  count: 13
                 },
                 title: {
                   display: true,
-                  text: 'Game',
+                  text: 'Games Played',
                   font: {
                     size: 20
                   }

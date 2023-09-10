@@ -1,4 +1,4 @@
-import { Data } from './utils/Data';
+import { Data } from './Data';
 
 export function compareScores(leftScore, rightScore) {
   if (leftScore.gameNum < rightScore.gameNum) {
@@ -20,7 +20,16 @@ export function compareScores(leftScore, rightScore) {
   }
 }
 
-export function processData(rawData) {
+export function processGameData(rawData) {
+  return {
+    wins: rawData.games.filter(game => game.won === true),
+    losses: rawData.games.filter(game => game.won === false),
+    played: rawData.games.filter(game => game.won !== null),
+    all: rawData.games
+  };
+}
+
+export function processScoreData(rawData) {
   const sortedScores = rawData.scores.sort(compareScores);
   var scores = [{time: 0, total: 0}];
   var prevScore = null;
