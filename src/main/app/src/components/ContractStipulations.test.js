@@ -1,6 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import ContractStipulations from './ContractStipulations';
 
+test('renders no values when no scores', () => {
+  const gameData = {
+    wins: [],
+    losses: [],
+    played: [],
+    all: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+  }
+  const scoreData = [];
+  render(<ContractStipulations gamesData={gameData} scoresData={scoreData} />);
+  const requiredPointsElement = screen.getByText(/Required Points \(0 of 300\)/i);
+  const pointsProgress = screen.getByText(/0% \(0\)/i);
+  expect(requiredPointsElement).toBeInTheDocument();
+  expect(pointsProgress).toBeInTheDocument();
+  expect(pointsProgress).toHaveClass("bg-success");
+});
+
 test('renders positive point differential', () => {
   const gameData = {
     wins: [{}],

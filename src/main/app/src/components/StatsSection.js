@@ -3,26 +3,28 @@ import ScoreChart from './ScoreChart';
 import ContractStipulations from './ContractStipulations';
 import React, { useEffect, useState } from 'react';
 
-function fetchData(setScoreData, setGameData) {
-  fetch('api/gamedata')
-    .then((response) => response.json())
-    .then((data) => {
-      setScoreData(processScoreData(data));
-      setGameData(processGameData(data));
-    })
-    .catch((err) => {
-      return
-    });
-  setTimeout(() => fetchData(setScoreData, setGameData), 30000);
-}
-
 function StatsSection() {
-  const [scoreData, setScoreData] = useState([]);
-  const [gameData, setGameData] = useState({wins: [], losses: [], played: [], all:[]});
+  const [gamesData, setGamesData] = useState({scores: [], games: []});
+  const [err, setErr] = useState(true);
 
   useEffect(() => {
-    fetchData(setScoreData, setGameData);
+    const fetchGameData = async() => {
+      try {
+        const response = await fetch('api/gamedata')
+        const data = await response.json()
+        setGamesData(data);
+        setErr(false);
+      } catch (err) {
+        setErr(true);
+      }
+      setTimeout(() => fetchGameData(), 30000);
+    }
+    fetchGameData();
   }, []);
+
+  const scoreData = processScoreData(gamesData);
+  const gameData = processGameData(gamesData);
+
   const chartData = {
     datasets: [{
       data: scoreData.map(data => ({x: data.time, y: data.total})),
@@ -39,6 +41,11 @@ function StatsSection() {
   }
   return (
     <div className="container">
+      {err &&
+        <div className="alert alert-danger" role="alert">
+          <p>API responded with an error, data may be stale.</p>
+        </div>
+      }
       <ScoreChart datasets={chartData}/>
       <ContractStipulations gamesData={gameData} scoresData={scoreData} />
     </div>

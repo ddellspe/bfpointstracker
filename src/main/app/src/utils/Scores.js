@@ -1,5 +1,3 @@
-import { Data } from './Data';
-
 export function compareScores(leftScore, rightScore) {
   if (leftScore.gameNum < rightScore.gameNum) {
     return -1;
@@ -51,8 +49,6 @@ export function processScoreData(rawData) {
     if(rawData.games.filter(game => game.gameNum === prevScore.gameNum)[0].won !== null) {
       scores.push({time: prevScore.gameNum, total: runningTotal});
     }
-  } else {
-    scores = Data;
   }
   return scores;
 }
