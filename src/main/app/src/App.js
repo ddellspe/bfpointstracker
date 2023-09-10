@@ -1,4 +1,4 @@
-import ScoreChart from './components/ScoreChart';
+import StatsSection from './components/StatsSection';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
           </div>
         </div>
       </div>
-      <ScoreChart />
+      <StatsSection />
     </div>
   );
 }

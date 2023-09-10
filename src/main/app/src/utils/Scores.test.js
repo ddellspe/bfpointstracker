@@ -1,5 +1,5 @@
-import { getTime, compareScores, processData } from './Scores';
-import { Data } from './utils/Data';
+import { getTime, compareScores, processScoreData, processGameData } from './Scores';
+import { Data } from './Data';
 
 test('getTime should return 0 when quarter is 1, minutes remaining is 15 and seconds remaining is 0 and game is 1', () => {
   const score = {quarter: 1, minutesRemaining: 15 , secondsRemaining: 0, gameNum: 1}
@@ -54,13 +54,13 @@ test('compareScores earlier second is less', () => {
   expect(compareScores(score2, score1)).toBe(1);
 })
 
-test('processData with no scores returns default', () => {
+test('processScoreData with no scores returns default', () => {
   const rawData = {scores: [], games: []}
   const expectedData = Data;
-  expect(processData(rawData)).toBe(expectedData);
+  expect(processScoreData(rawData)).toBe(expectedData);
 });
 
-test('processData has only 2 data points with 1 score when game not complete', () => {
+test('processScoreData has only 2 data points with 1 score when game not complete', () => {
   const rawData = {
     scores: [
       {
@@ -83,13 +83,13 @@ test('processData has only 2 data points with 1 score when game not complete', (
     {time: 0.375, total: 7}
   ]
 
-  const actualOutput = processData(rawData)
+  const actualOutput = processScoreData(rawData)
 
   expect(actualOutput.length).toBe(2)
-  expect(processData(rawData)).toStrictEqual(expectedData);
+  expect(actualOutput).toStrictEqual(expectedData);
 });
 
-test('processData has 4 data points with 2 scores when game won', () => {
+test('processScoreData has 4 data points with 2 scores when game won', () => {
   const rawData = {
     scores: [
       {
@@ -121,13 +121,13 @@ test('processData has 4 data points with 2 scores when game won', () => {
     {time: 1, total: 14}
   ]
 
-  const actualOutput = processData(rawData)
+  const actualOutput = processScoreData(rawData)
 
   expect(actualOutput.length).toBe(4)
-  expect(processData(rawData)).toStrictEqual(expectedData);
+  expect(actualOutput).toStrictEqual(expectedData);
 });
 
-test('processData has 4 data points with 2 scores when two games played', () => {
+test('processScoreData has 4 data points with 2 scores when two games played', () => {
   const rawData = {
     scores: [
       {
@@ -163,13 +163,13 @@ test('processData has 4 data points with 2 scores when two games played', () => 
     {time: 1.625, total: 14}
   ]
 
-  const actualOutput = processData(rawData)
+  const actualOutput = processScoreData(rawData)
 
   expect(actualOutput.length).toBe(4)
-  expect(processData(rawData)).toStrictEqual(expectedData);
+  expect(actualOutput).toStrictEqual(expectedData);
 });
 
-test('processData has 4 data points with 2 scores when two games played, last score at end of game', () => {
+test('processScoreData has 4 data points with 2 scores when two games played, last score at end of game', () => {
   const rawData = {
     scores: [
       {
@@ -212,13 +212,13 @@ test('processData has 4 data points with 2 scores when two games played, last sc
     {time: 1.625, total: 21}
   ]
 
-  const actualOutput = processData(rawData)
+  const actualOutput = processScoreData(rawData)
 
   expect(actualOutput.length).toBe(4)
-  expect(processData(rawData)).toStrictEqual(expectedData);
+  expect(actualOutput).toStrictEqual(expectedData);
 });
 
-test('processData has 4 data points with 2 scores when two games played, last score just before end of game', () => {
+test('processScoreData has 4 data points with 2 scores when two games played, last score just before end of game', () => {
   const rawData = {
     scores: [
       {
@@ -262,13 +262,13 @@ test('processData has 4 data points with 2 scores when two games played, last sc
     {time: 1.625, total: 21}
   ]
 
-  const actualOutput = processData(rawData)
+  const actualOutput = processScoreData(rawData)
 
   expect(actualOutput.length).toBe(5)
-  expect(processData(rawData)).toStrictEqual(expectedData);
+  expect(actualOutput).toStrictEqual(expectedData);
 });
 
-test('processData has 4 data points with 2 scores when two games played, last score in last quarter minutes before end', () => {
+test('processScoreData has 4 data points with 2 scores when two games played, last score in last quarter minutes before end', () => {
   const rawData = {
     scores: [
       {
@@ -312,8 +312,102 @@ test('processData has 4 data points with 2 scores when two games played, last sc
     {time: 1.625, total: 21}
   ]
 
-  const actualOutput = processData(rawData)
+  const actualOutput = processScoreData(rawData)
 
   expect(actualOutput.length).toBe(5)
-  expect(processData(rawData)).toStrictEqual(expectedData);
+  expect(actualOutput).toStrictEqual(expectedData);
+});
+
+test('processGameData returns proper structure with no data', () => {
+  const rawData = {scores: [], games: []}
+
+  expect(processGameData(rawData)).toStrictEqual({wins: [], losses: [], played: [], all: []});
+});
+
+test('processGameData returns proper structure with one won game', () => {
+  const rawData = {
+    scores: [],
+    games: [
+      {
+        gameNum: 1,
+        won: true
+      }
+    ]
+  }
+
+  const expected = {
+    wins: [
+      {
+        gameNum: 1,
+        won: true
+      }
+    ],
+    losses: [],
+    played: [
+      {
+        gameNum: 1,
+        won: true
+      }
+    ],
+    all: [
+      {
+        gameNum: 1,
+        won: true
+      }
+    ],
+  };
+
+  expect(processGameData(rawData)).toStrictEqual(expected);
+});
+
+test('processGameData returns proper structure with one win one loss', () => {
+  const rawData = {
+    scores: [],
+    games: [
+      {
+        gameNum: 1,
+        won: true
+      },
+      {
+        gameNum: 2,
+        won: false
+      }
+    ]
+  }
+
+  const expected = {
+    wins: [
+      {
+        gameNum: 1,
+        won: true
+      }
+    ],
+    losses: [
+      {
+        gameNum: 2,
+        won: false
+      }],
+    played: [
+      {
+        gameNum: 1,
+        won: true
+      },
+      {
+        gameNum: 2,
+        won: false
+      }
+    ],
+    all: [
+      {
+        gameNum: 1,
+        won: true
+      },
+      {
+        gameNum: 2,
+        won: false
+      }
+    ],
+  };
+
+  expect(processGameData(rawData)).toStrictEqual(expected);
 });
