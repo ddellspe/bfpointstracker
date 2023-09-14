@@ -1,6 +1,7 @@
 package live.bfpointstracker.app.controller
 
 import live.bfpointstracker.app.model.Game
+import live.bfpointstracker.app.model.GameWithPossibleError
 import live.bfpointstracker.app.service.GameService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,27 +17,43 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
 class GameController(var gameService: GameService) {
   @PostMapping("/game")
-  fun addGame(@RequestBody game: Game): ResponseEntity<Game> {
-    return ResponseEntity.ok(gameService.updateOrSaveGame(game))
+  fun addGame(@RequestBody game: Game): ResponseEntity<GameWithPossibleError> {
+    return try {
+      ResponseEntity.ok(GameWithPossibleError(gameService.createGame(game)))
+    } catch (e: IllegalArgumentException) {
+      val errorMap: MutableMap<String, Any> = HashMap()
+      errorMap["error"] = true
+      errorMap["errorMessage"] = e.message!!
+      ResponseEntity(GameWithPossibleError(game, errorMap), HttpStatus.BAD_REQUEST)
+    }
   }
 
   @PutMapping("/game")
-  fun updateGame(@RequestBody game: Game): ResponseEntity<Game> {
-    return ResponseEntity.ok(gameService.updateOrSaveGame(game))
+  fun updateGame(@RequestBody game: Game): ResponseEntity<GameWithPossibleError> {
+    return try {
+      ResponseEntity.ok(GameWithPossibleError(gameService.updateGame(game)))
+    } catch (e: IllegalArgumentException) {
+      val errorMap: MutableMap<String, Any> = HashMap()
+      errorMap["error"] = true
+      errorMap["errorMessage"] = e.message!!
+      ResponseEntity(GameWithPossibleError(game, errorMap), HttpStatus.BAD_REQUEST)
+    }
   }
 
   @GetMapping("/game/{id}")
-  fun getGame(@PathVariable id: Long): ResponseEntity<Game> {
-    val game: Game? = gameService.getGame(id)
-    return if (game != null) {
-      ResponseEntity(game, HttpStatus.OK)
-    } else {
-      ResponseEntity(HttpStatus.BAD_REQUEST)
+  fun getGame(@PathVariable id: Long): ResponseEntity<GameWithPossibleError> {
+    return try {
+      ResponseEntity.ok(GameWithPossibleError(gameService.getGame(id)))
+    } catch (e: IllegalArgumentException) {
+      val errorMap: MutableMap<String, Any> = HashMap()
+      errorMap["error"] = true
+      errorMap["errorMessage"] = e.message!!
+      ResponseEntity(GameWithPossibleError(null, errorMap), HttpStatus.BAD_REQUEST)
     }
   }
 
   @GetMapping("/games")
-  fun getScores(): ResponseEntity<List<Game>> {
+  fun getGames(): ResponseEntity<List<Game>> {
     val games: List<Game> = gameService.getAllGames()
     return ResponseEntity(games, HttpStatus.OK)
   }

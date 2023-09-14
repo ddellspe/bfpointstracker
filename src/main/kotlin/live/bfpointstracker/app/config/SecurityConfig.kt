@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableConfigurationProperties(BasicAuthProperties::class)
 class SecurityConfig {
 
-  @Autowired private lateinit var props: BasicAuthProperties
+  @Autowired private var props: BasicAuthProperties = BasicAuthProperties()
 
   @Bean
   fun userDetailsService(): InMemoryUserDetailsManager {
