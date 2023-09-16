@@ -1,8 +1,7 @@
 package live.bfpointstracker.app.controller
 
-import live.bfpointstracker.app.model.Game
 import live.bfpointstracker.app.model.Score
-import live.bfpointstracker.app.service.GameService
+import live.bfpointstracker.app.model.ScoreWithPossibleError
 import live.bfpointstracker.app.service.ScoreService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,34 +15,40 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api")
-class ScoreController(var scoreService: ScoreService, var gameService: GameService) {
+class ScoreController(var scoreService: ScoreService) {
   @PostMapping("/score")
-  fun addScore(@RequestBody score: Score): ResponseEntity<Score> {
-    val game: Game? = gameService.getGame(score.gameNum)
-    return if (game == null) {
-      ResponseEntity(score, HttpStatus.BAD_REQUEST)
-    } else {
-      ResponseEntity.ok(scoreService.saveOrUpdateScore(score))
+  fun addScore(@RequestBody score: Score): ResponseEntity<ScoreWithPossibleError> {
+    return try {
+      ResponseEntity.ok(ScoreWithPossibleError(scoreService.createScore(score)))
+    } catch (e: IllegalArgumentException) {
+      val errorMap: MutableMap<String, Any> = HashMap()
+      errorMap["error"] = true
+      errorMap["errorMessage"] = e.message!!
+      ResponseEntity(ScoreWithPossibleError(score, errorMap), HttpStatus.BAD_REQUEST)
     }
   }
 
   @PutMapping("/score")
-  fun updateScore(@RequestBody score: Score): ResponseEntity<Score> {
-    val game: Game? = gameService.getGame(score.gameNum)
-    return if (game == null) {
-      ResponseEntity(score, HttpStatus.BAD_REQUEST)
-    } else {
-      ResponseEntity.ok(scoreService.saveOrUpdateScore(score))
+  fun updateScore(@RequestBody score: Score): ResponseEntity<ScoreWithPossibleError> {
+    return try {
+      ResponseEntity.ok(ScoreWithPossibleError(scoreService.updateScore(score)))
+    } catch (e: IllegalArgumentException) {
+      val errorMap: MutableMap<String, Any> = HashMap()
+      errorMap["error"] = true
+      errorMap["errorMessage"] = e.message!!
+      ResponseEntity(ScoreWithPossibleError(score, errorMap), HttpStatus.BAD_REQUEST)
     }
   }
 
   @GetMapping("/score/{id}")
-  fun getScore(@PathVariable id: Long): ResponseEntity<Score> {
-    val score: Score? = scoreService.getScore(id)
-    return if (score != null) {
-      ResponseEntity(score, HttpStatus.OK)
-    } else {
-      ResponseEntity(HttpStatus.BAD_REQUEST)
+  fun getScore(@PathVariable id: Long): ResponseEntity<ScoreWithPossibleError> {
+    return try {
+      ResponseEntity.ok(ScoreWithPossibleError(scoreService.getScore(id)))
+    } catch (e: IllegalArgumentException) {
+      val errorMap: MutableMap<String, Any> = HashMap()
+      errorMap["error"] = true
+      errorMap["errorMessage"] = e.message!!
+      ResponseEntity(ScoreWithPossibleError(null, errorMap), HttpStatus.BAD_REQUEST)
     }
   }
 

@@ -17,13 +17,6 @@ class DataController(var gameService: GameService, var scoreService: ScoreServic
   fun getGameData(): GameData {
     val scores: List<Score> = scoreService.getAllScores()
     val games: List<Game> = gameService.getAllGames()
-    val relevantGames: List<Game> =
-      scores
-        .stream()
-        .map { game -> game.gameNum }
-        .distinct()
-        .map { gameNum -> games.filter { game -> game.gameNum == gameNum }.first() }
-        .toList()
     return GameData(games, scores)
   }
 }

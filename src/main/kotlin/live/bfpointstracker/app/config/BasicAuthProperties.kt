@@ -7,15 +7,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories
 
 @ConfigurationProperties(prefix = "auth")
 class BasicAuthProperties {
-  private lateinit var users: Map<String, UserDetail>
-
-  fun getUsers(): Map<String, UserDetail> {
-    return users
-  }
-
-  fun setUsers(users: Map<String, UserDetail>) {
-    this.users = users
-  }
+  var users: Map<String, UserDetail> = emptyMap()
 
   fun getUserDetails(): Set<UserDetails> {
     return users.entries
@@ -30,7 +22,7 @@ class BasicAuthProperties {
   }
 
   class UserDetail {
-    lateinit var password: String
-    lateinit var role: String
+    var password: String = "password"
+    var role: String = "USER"
   }
 }
