@@ -54,7 +54,8 @@ function ScoreChart({datasets}) {
                 },
                 ticks: {
                   display: true,
-                  count: 13
+                  beginAtZero: true,
+                  stepSize: 1
                 },
                 title: {
                   display: true,
