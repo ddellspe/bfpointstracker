@@ -53,11 +53,7 @@ class SecurityConfig {
       .cors { customizer -> customizer.disable() }
       .csrf { customizer -> customizer.disable() }
       .authorizeHttpRequests { auth ->
-        auth
-          .requestMatchers("/api/gamedata", "/swagger-ui/**", "/v3/**", "/login")
-          .permitAll()
-          .anyRequest()
-          .authenticated()
+        auth.requestMatchers("/api/gamedata", "/login").permitAll().anyRequest().authenticated()
       }
       .httpBasic { customizer ->
         customizer.authenticationEntryPoint(userAuthenticationErrorHandler())
