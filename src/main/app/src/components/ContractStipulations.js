@@ -9,12 +9,13 @@ function ContractStipulations({gamesData, scoresData}) {
   const gamesClass = PROGRESS_DEFAULT + (winPercentage <= 0.5 ? "warning text-dark" : "success");
 
   const pointsScored = scoresData.length === 0 ? 0 : scoresData[scoresData.length - 1].total;
+  const gamesPlaying = scoresData.length === 0 ? 0 : Math.ceil(scoresData[scoresData.length - 1].time);
   const pointsExpected = gamesAvailable * 25
   const pointsMadeProgress = Math.ceil(pointsScored / pointsExpected * 100)
-  const pointsAverage = pointsScored / gamesPlayed;
+  const pointsAverage = pointsScored / gamesPlaying;
   const pointsScoredClass = PROGRESS_DEFAULT + (pointsAverage < 25 ? "warning text-dark" : "success");
 
-  const pointDiff = gamesPlayed * 25 - pointsScored;
+  const pointDiff = gamesPlaying * 25 - pointsScored;
   const sign = pointDiff < 0 ? "+" : (pointDiff === 0 ? "" : "-");
   const differential = sign + Math.abs(pointDiff);
 
