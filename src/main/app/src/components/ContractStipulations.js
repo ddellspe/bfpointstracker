@@ -1,6 +1,7 @@
 const PROGRESS_DEFAULT = "progress-bar progress-bar-striped progress-bar-animated bg-";
 
 function ContractStipulations({gamesData, scoresData}) {
+  const gamesAvailable = gamesData.all.length;
   const gamesWon = gamesData.wins.length;
   const gamesPlayed = gamesData.played.length;
   const gameWinProgress = Math.ceil(gamesWon / 7 * 100);
@@ -8,7 +9,8 @@ function ContractStipulations({gamesData, scoresData}) {
   const gamesClass = PROGRESS_DEFAULT + (winPercentage <= 0.5 ? "warning text-dark" : "success");
 
   const pointsScored = scoresData.length === 0 ? 0 : scoresData[scoresData.length - 1].total;
-  const pointsMadeProgress = Math.ceil(pointsScored / 300 * 100)
+  const pointsExpected = gamesAvailable * 25
+  const pointsMadeProgress = Math.ceil(pointsScored / pointsExpected * 100)
   const pointsAverage = pointsScored / gamesPlayed;
   const pointsScoredClass = PROGRESS_DEFAULT + (pointsAverage < 25 ? "warning text-dark" : "success");
 
@@ -33,9 +35,9 @@ function ContractStipulations({gamesData, scoresData}) {
       </div>
       <div className="row py-2">
         <div className="col">
-          <h3>Required Points ({pointsScored} of 300)</h3>
+          <h3>Required Points ({pointsScored} of {pointsExpected})</h3>
           <div className="progress fs-5" style={{height: "36px"}}>
-            <div className={pointsScoredClass} role="progressbar" style={{width: `${pointsMadeProgress}%`}} aria-valuenow={pointsScored} aria-valuemin="0" aria-valuemax="300">{pointsMadeProgress}% ({differential})</div>
+            <div className={pointsScoredClass} role="progressbar" style={{width: `${pointsMadeProgress}%`}} aria-valuenow={pointsScored} aria-valuemin="0" aria-valuemax={pointsExpected}>{pointsMadeProgress}% ({differential})</div>
           </div>
 
         </div>
