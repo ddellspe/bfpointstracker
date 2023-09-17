@@ -6,10 +6,15 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@visx/axis": "^3.3.0",
+    "@visx/curve": "^3.3.0",
+    "@visx/group": "^3.3.0",
+    "@visx/responsive": "^3.3.0",
+    "@visx/scale": "^3.3.0",
+    "@visx/shape": "^3.3.0",
+    "@visx/threshold": "^3.3.0",
     "bootstrap": "^5.3.1",
-    "chart.js": "^4.4.0",
     "react": "^18.2.0",
-    "react-chartjs-2": "^5.2.0",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
@@ -20,8 +25,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false --coverage",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --watchAll=false",
+    "eject": "react-scripts eject",
+    "coverage": "react-scripts test --watchAll=false --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -44,7 +50,8 @@
   "proxy": "http://localhost:8080",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "jest-fetch-mock": "^3.0.3"
+    "jest-fetch-mock": "^3.0.3",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "jest": {
     "collectCoverageFrom": [

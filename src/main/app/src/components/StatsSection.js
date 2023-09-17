@@ -1,5 +1,5 @@
 import { processScoreData, processGameData } from '../utils/Scores';
-import ScoreChart from './ScoreChart';
+import ScoreChartContainer from './ScoreChartContainer';
 import ContractStipulations from './ContractStipulations';
 import React, { useEffect, useState } from 'react';
 
@@ -25,20 +25,11 @@ function StatsSection() {
   const scoreData = processScoreData(gamesData);
   const gameData = processGameData(gamesData);
 
-  const chartData = {
-    datasets: [{
-      data: scoreData.map(data => ({x: data.time, y: data.total})),
-      borderColor: 'rgba(0, 0, 0, 1)',
-      pointStyle: 'circle',
-      radius: 2
-    },
-    {
-      data: [...Array(gameData.all.length + 1).keys()].map(v => ({x: v, y: (v * 25)})),
-      pointStyle: false,
-      borderColor: 'rgba(255, 0, 0, 0.3)',
-      stepped: 'after'
-    }]
-  }
+  const chartData = scoreData.map(data => ({
+    time: data.time,
+    points: data.total,
+    goal: 25 * Math.ceil(data.time)
+  }));
   return (
     <div className="container">
       {err &&
@@ -46,7 +37,7 @@ function StatsSection() {
           <p>API responded with an error, data may be stale.</p>
         </div>
       }
-      <ScoreChart datasets={chartData}/>
+      <ScoreChartContainer gameData={chartData}/>
       <ContractStipulations gamesData={gameData} scoresData={scoreData} />
     </div>
   );

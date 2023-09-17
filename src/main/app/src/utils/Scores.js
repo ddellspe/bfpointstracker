@@ -33,6 +33,7 @@ export function processScoreData(rawData) {
   var prevScore = null;
   var runningTotal = 0;
   if (sortedScores.length > 0) {
+    scores.push({time:1/3600, total: 0});
     for (let i = 0 ; i < sortedScores.length ; i++) {
       let score = sortedScores[i];
       if (prevScore != null && score.gameNum !== prevScore.gameNum) {
@@ -41,6 +42,7 @@ export function processScoreData(rawData) {
               prevScore.secondsRemaining !== 0) {
           scores.push({time: prevScore.gameNum, total: runningTotal});
         }
+        scores.push({time: ((prevScore.gameNum * 3600 + 1) / 3600), total: runningTotal});
       }
       runningTotal += score.points;
       scores.push({time: getTime(score), total: runningTotal});

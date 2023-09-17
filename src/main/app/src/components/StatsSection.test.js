@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 import React from 'react';
 import StatsSection from './StatsSection';
 
-const mockScoreChart = jest.fn();
+const mockScoreChartContainer = jest.fn();
 const mockContractStipulations = jest.fn();
 
 beforeEach(() => {
@@ -11,8 +11,8 @@ beforeEach(() => {
   jest.resetAllMocks();
 })
 
-jest.mock("./ScoreChart", () => (props) => {
-  mockScoreChart(props);
+jest.mock("./ScoreChartContainer", () => (props) => {
+  mockScoreChartContainer(props);
   return <div>score chart</div>;
 });
 
@@ -29,21 +29,14 @@ test('calls come through when API call fails', async () => {
   });
 
   expect(await screen.findByText('API responded with an error, data may be stale.')).toBeInTheDocument();
-  expect(mockScoreChart).toHaveBeenCalledWith({
-    datasets: {
-      datasets: [{
-        data: [{x: 0, y: 0}],
-        borderColor: 'rgba(0, 0, 0, 1)',
-        pointStyle: 'circle',
-        radius: 2
-      },
+  expect(mockScoreChartContainer).toHaveBeenCalledWith({
+    gameData: [
       {
-        data: [{x: 0, y: 0}],
-        pointStyle: false,
-        borderColor: 'rgba(255, 0, 0, 0.3)',
-        stepped: 'after'
-      }]
-    }
+        time: 0,
+        goal: 0,
+        points: 0
+      }
+    ]
   });
   expect(mockContractStipulations).toHaveBeenCalledWith({
     gamesData: {wins: [], losses: [], played: [], all: []},
@@ -63,21 +56,14 @@ test('calls come through when API call succeeds', async () => {
 
   await waitForElementToBeRemoved(() => screen.queryByText('API responded with an error, data may be stale.'));
 
-  expect(mockScoreChart).toHaveBeenCalledWith({
-    datasets: {
-      datasets: [{
-        data: [{x: 0, y: 0}],
-        borderColor: 'rgba(0, 0, 0, 1)',
-        pointStyle: 'circle',
-        radius: 2
-      },
+  expect(mockScoreChartContainer).toHaveBeenCalledWith({
+    gameData: [
       {
-        data: [{x: 0, y: 0}],
-        pointStyle: false,
-        borderColor: 'rgba(255, 0, 0, 0.3)',
-        stepped: 'after'
-      }]
-    }
+        time: 0,
+        goal: 0,
+        points: 0
+      }
+    ]
   });
   expect(mockContractStipulations).toHaveBeenCalledWith({
     gamesData: {wins: [], losses: [], played: [], all: []},
