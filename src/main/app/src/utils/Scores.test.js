@@ -79,12 +79,13 @@ test('processScoreData has only 2 data points with 1 score when game not complet
   }
   const expectedData = [
     {time: 0, total: 0},
+    {time: 1/3600, total: 0},
     {time: 0.375, total: 7}
   ]
 
   const actualOutput = processScoreData(rawData)
 
-  expect(actualOutput.length).toBe(2)
+  expect(actualOutput.length).toBe(3)
   expect(actualOutput).toStrictEqual(expectedData);
 });
 
@@ -115,6 +116,7 @@ test('processScoreData has 4 data points with 2 scores when game won', () => {
   }
   const expectedData = [
     {time: 0, total: 0},
+    {time: 1/3600, total: 0},
     {time: 0.375, total: 7},
     {time: 0.625, total: 14},
     {time: 1, total: 14}
@@ -122,7 +124,7 @@ test('processScoreData has 4 data points with 2 scores when game won', () => {
 
   const actualOutput = processScoreData(rawData)
 
-  expect(actualOutput.length).toBe(4)
+  expect(actualOutput.length).toBe(5)
   expect(actualOutput).toStrictEqual(expectedData);
 });
 
@@ -157,14 +159,16 @@ test('processScoreData has 4 data points with 2 scores when two games played', (
   }
   const expectedData = [
     {time: 0, total: 0},
+    {time: 1/3600, total: 0},
     {time: 0.375, total: 7},
     {time: 1, total: 7},
+    {time: 3601/3600, total: 7},
     {time: 1.625, total: 14}
   ]
 
   const actualOutput = processScoreData(rawData)
 
-  expect(actualOutput.length).toBe(4)
+  expect(actualOutput.length).toBe(6)
   expect(actualOutput).toStrictEqual(expectedData);
 });
 
@@ -206,14 +210,16 @@ test('processScoreData has 4 data points with 2 scores when two games played, la
   }
   const expectedData = [
     {time: 0, total: 0},
+    {time: 1/3600, total: 0},
     {time: 0.375, total: 7},
     {time: 1, total: 14},
+    {time: 3601/3600, total: 14},
     {time: 1.625, total: 21}
   ]
 
   const actualOutput = processScoreData(rawData)
 
-  expect(actualOutput.length).toBe(4)
+  expect(actualOutput.length).toBe(6)
   expect(actualOutput).toStrictEqual(expectedData);
 });
 
@@ -255,15 +261,17 @@ test('processScoreData has 4 data points with 2 scores when two games played, la
   }
   const expectedData = [
     {time: 0, total: 0},
+    {time: 1/3600, total: 0},
     {time: 0.375, total: 7},
     {time: 357/360, total: 14},
     {time: 1, total: 14},
+    {time: 3601/3600, total: 14},
     {time: 1.625, total: 21}
   ]
 
   const actualOutput = processScoreData(rawData)
 
-  expect(actualOutput.length).toBe(5)
+  expect(actualOutput.length).toBe(7)
   expect(actualOutput).toStrictEqual(expectedData);
 });
 
@@ -305,15 +313,17 @@ test('processScoreData has 4 data points with 2 scores when two games played, la
   }
   const expectedData = [
     {time: 0, total: 0},
+    {time: 1/3600, total: 0},
     {time: 0.375, total: 7},
     {time: 0.9, total: 14},
     {time: 1, total: 14},
+    {time: 3601/3600, total: 14},
     {time: 1.625, total: 21}
   ]
 
   const actualOutput = processScoreData(rawData)
 
-  expect(actualOutput.length).toBe(5)
+  expect(actualOutput.length).toBe(7)
   expect(actualOutput).toStrictEqual(expectedData);
 });
 
