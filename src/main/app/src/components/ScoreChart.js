@@ -4,6 +4,7 @@ import { curveStepAfter, curveStepBefore } from "@visx/curve";
 import { LinePath } from "@visx/shape";
 import { Threshold } from "@visx/threshold";
 import { scaleLinear } from "@visx/scale";
+import { GridRows, GridColumns } from '@visx/grid';
 import { AxisLeft, AxisBottom } from "@visx/axis";
 
 export const background = "#ffffff";
@@ -24,18 +25,36 @@ export default function ScoreChart({
   const goal = (d) => d.goal;
   const points = (d) => d.points;
 
+  const maxGame = Math.max(Math.ceil(Math.max(...gameData.map(time).filter(Boolean))), 1);
+  var gameValues = [...Array(maxGame)].map((_, x) => (x + 1));
+  if (maxGame >= 5) {
+    gameValues = gameValues.map((x) => ([x - 0.5, x])).reduce((a, b) => a.concat(b), []);
+  } else {
+    gameValues = gameValues.map((x) => ([x - 0.75, x - 0.5, x - 0.25, x])).reduce((a, b) => a.concat(b), []);
+  }
+
   const gameScale = scaleLinear({
-    domain: [Math.min(...gameData.map(time)), Math.max(...gameData.map(time))]
-  });
-  const pointScale = scaleLinear({
-    domain: [
-      Math.min(...gameData.map((d) => Math.min(goal(d), points(d)))),
-      Math.max(...gameData.map((d) => Math.max(goal(d), points(d))))
-    ],
-    nice: true
+    domain: [0, maxGame]
   });
 
-  const maxGame = Math.max(...gameData.map(time));
+  const maxPoints = Math.max(
+    Math.ceil(
+      Math.max(
+        Math.max(...gameData.map(goal)),
+        Math.max(...gameData.map(points))
+      ) / 25
+    ) || 0,
+    1);
+  const pointValues = [...Array(maxPoints)].map((_, y) => ((y + 1 ) * 25)).filter(Boolean);
+
+  const pointScale = scaleLinear({
+    domain: [
+      Math.min(...gameData.map((d) => Math.min(goal(d), points(d)))) || 0,
+      maxPoints * 25
+    ],
+    nice: false
+  });
+
   // bounds
   const xMax = width - margin.left - margin.right;
   const yMax = finalHeight - margin.top - margin.bottom;
@@ -55,12 +74,25 @@ export default function ScoreChart({
           rx={14}
         />
         <Group left={margin.left} top={margin.top}>
+          <GridRows
+            scale={pointScale}
+            width={xMax}
+            height={yMax}
+            stroke="#e0e0e0"
+            tickValues={pointValues} />
+          <GridColumns
+            scale={gameScale}
+            width={xMax}
+            height={yMax}
+            stroke="#e0e0e0"
+            tickValues={gameValues} />
           <text x={xMax - 75} y={yMax - 5} fontSize={12}>
             Games Played
           </text>
           <AxisBottom
             top={yMax}
             scale={gameScale}
+            tickFormat={(value) => Math.round(value)}
             numTicks={maxGame > 5 ? (width > 520 ? maxGame : (Math.ceil(maxGame / 2))) : maxGame}
           />
           <AxisLeft scale={pointScale} />
