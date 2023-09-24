@@ -1,6 +1,18 @@
 import { render, screen } from '@testing-library/react';
 import ContractStipulations from './ContractStipulations';
 
+
+const mockLinearProgress = jest.fn();
+
+beforeEach(() => {
+  jest.resetAllMocks();
+})
+
+jest.mock("@mui/material/LinearProgress", () => (props) => {
+  mockLinearProgress(props);
+  return <div>score chart</div>;
+});
+
 test('renders no values when no scores', () => {
   const gameData = {
     wins: [],
@@ -14,7 +26,15 @@ test('renders no values when no scores', () => {
   const pointsProgress = screen.getByText(/0% \(0\)/i);
   expect(requiredPointsElement).toBeInTheDocument();
   expect(pointsProgress).toBeInTheDocument();
-  expect(pointsProgress).toHaveClass("bg-success");
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value:0,
+    valueBuffer:0,
+    color:"success"
+  });
 });
 
 test('renders positive point differential', () => {
@@ -32,7 +52,26 @@ test('renders positive point differential', () => {
   const pointsProgress = screen.getByText(/10% \(\+5\)/i);
   expect(requiredPointsElement).toBeInTheDocument();
   expect(pointsProgress).toBeInTheDocument();
-  expect(pointsProgress).toHaveClass("bg-success");
+  // games
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 15,
+    valueBuffer: 8,
+    color:"success"
+  });
+  // points
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 10,
+    valueBuffer: 9,
+    color:"success"
+  });
 });
 
 test('renders negative point differential', () => {
@@ -52,9 +91,25 @@ test('renders negative point differential', () => {
   const winsProgress = screen.getByText(/15%/i);
   expect(requiredPointsElement).toBeInTheDocument();
   expect(pointsProgress).toBeInTheDocument();
-  expect(pointsProgress).toHaveClass("bg-warning");
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 7,
+    valueBuffer: 9,
+    color:"warning"
+  });
   expect(winsProgress).toBeInTheDocument();
-  expect(winsProgress).toHaveClass("bg-success");
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 15,
+    valueBuffer: 8,
+    color:"success"
+  });
 });
 
 test('renders zero point differential and wins warning', () => {
@@ -75,9 +130,25 @@ test('renders zero point differential and wins warning', () => {
   expect(requiredPointsElement).toBeInTheDocument();
   expect(requiredWinsElement).toBeInTheDocument();
   expect(pointsProgress).toBeInTheDocument();
-  expect(pointsProgress).toHaveClass("bg-success");
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 17,
+    valueBuffer: 17,
+    color:"success"
+  });
   expect(winsProgress).toBeInTheDocument();
-  expect(winsProgress).toHaveClass("bg-warning");
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 15,
+    valueBuffer: 15,
+    color:"warning"
+  });
 });
 
 test('renders minus 5 point differential when game in progress', () => {
@@ -100,7 +171,23 @@ test('renders minus 5 point differential when game in progress', () => {
   expect(requiredPointsElement).toBeInTheDocument();
   expect(requiredWinsElement).toBeInTheDocument();
   expect(pointsProgress).toBeInTheDocument();
-  expect(pointsProgress).toHaveClass("bg-warning");
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 24,
+    valueBuffer: 25,
+    color:"warning"
+  });
   expect(winsProgress).toBeInTheDocument();
-  expect(winsProgress).toHaveClass("bg-warning");
+  expect(mockLinearProgress).toHaveBeenCalledWith({
+    sx:{
+      height: 16
+    },
+    variant:"buffer",
+    value: 15,
+    valueBuffer: 15,
+    color:"warning"
+  });
 });

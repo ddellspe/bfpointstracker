@@ -6,6 +6,7 @@ import { Threshold } from "@visx/threshold";
 import { scaleLinear } from "@visx/scale";
 import { GridRows, GridColumns } from '@visx/grid';
 import { AxisLeft, AxisBottom } from "@visx/axis";
+import Box from '@mui/material/Box';
 
 export const background = "#ffffff";
 
@@ -63,7 +64,7 @@ export default function ScoreChart({
   pointScale.range([yMax, 0]);
 
   return(
-    <div>
+    <Box>
       <svg width={width} height={finalHeight}>
         <rect
           x={0}
@@ -137,6 +138,6 @@ export default function ScoreChart({
           />
         </Group>
       </svg>
-    </div>
+    </Box>
   );
 }
