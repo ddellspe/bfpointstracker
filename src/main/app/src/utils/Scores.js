@@ -28,7 +28,21 @@ export function processGameData(rawData) {
 }
 
 export function processScoreData(rawData) {
-  const sortedScores = rawData.scores.sort(compareScores);
+  const rawScores = rawData.scores;
+  const gamesPlayed = rawData.games.filter(game => game.won !== null);
+  for (let i = 0 ; i < gamesPlayed.length ; i++) {
+    let game = gamesPlayed[i];
+    if (rawScores.filter(score => score.gameNum === game.gameNum).length === 0){
+      rawScores.push({
+        gameNum: game.gameNum,
+        quarter: 4,
+        minutesRemaining: 0,
+        secondsRemaining: 0,
+        points: 0
+      });
+    }
+  }
+  const sortedScores = rawScores.sort(compareScores);
   var scores = [{time: 0, total: 0}];
   var prevScore = null;
   var runningTotal = 0;
@@ -49,7 +63,11 @@ export function processScoreData(rawData) {
       prevScore = score;
     }
     if(rawData.games.filter(game => game.gameNum === prevScore.gameNum)[0].won !== null) {
-      scores.push({time: prevScore.gameNum, total: runningTotal});
+      if (prevScore.quarter !== 4 ||
+            prevScore.minutesRemaining !== 0 ||
+            prevScore.secondsRemaining !== 0) {
+        scores.push({time: prevScore.gameNum, total: runningTotal});
+      }
     }
   }
   return scores;

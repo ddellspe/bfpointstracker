@@ -1,49 +1,84 @@
-const PROGRESS_DEFAULT = "progress-bar progress-bar-striped progress-bar-animated bg-";
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
 
 function ContractStipulations({gamesData, scoresData}) {
   const gamesAvailable = gamesData.all.length;
   const gamesWon = gamesData.wins.length;
   const gamesPlayed = gamesData.played.length;
   const gameWinProgress = Math.ceil(gamesWon / 7 * 100);
+  const expectedGameWinProgress = Math.ceil((gamesPlayed / 2) / 7 * 100);
   const winPercentage = gamesWon / gamesPlayed;
-  const gamesClass = PROGRESS_DEFAULT + (winPercentage <= 0.5 ? "warning text-dark" : "success");
+  const gamesColor = (winPercentage <= 0.5 ? "warning" : "success");
 
   const pointsScored = scoresData.length === 0 ? 0 : scoresData[scoresData.length - 1].total;
-  const gamesPlaying = scoresData.length === 0 ? 0 : Math.ceil(scoresData[scoresData.length - 1].time);
+  const gamesPlaying = scoresData.length === 0 ? 0 : Math.max(gamesData.played.length, Math.ceil(scoresData[scoresData.length - 1].time));
   const pointsExpected = gamesAvailable * 25
   const pointsMadeProgress = Math.ceil(pointsScored / pointsExpected * 100)
+  const pointsNeededProgress = Math.ceil((gamesPlaying * 25) / pointsExpected * 100)
   const pointsAverage = pointsScored / gamesPlaying;
-  const pointsScoredClass = PROGRESS_DEFAULT + (pointsAverage < 25 ? "warning text-dark" : "success");
+  const pointsScoredColor = (pointsAverage < 25 ? "warning" : "success" );
 
   const pointDiff = gamesPlaying * 25 - pointsScored;
   const sign = pointDiff < 0 ? "+" : (pointDiff === 0 ? "" : "-");
   const differential = sign + Math.abs(pointDiff);
 
   return (
-    <div className="container overflow-hidden">
-      <div className="row py-2">
-        <div className="col">
-          <h2>Contract Stipulations</h2>
-        </div>
-      </div>
-      <div className="row py-2">
-        <div className="col">
-          <h3>Required Wins ({gamesWon} of 7)</h3>
-          <div className="progress fs-5" style={{height: "36px"}}>
-            <div className={gamesClass} role="progressbar" style={{width: `${gameWinProgress}%`}} aria-valuenow={gamesWon} aria-valuemin="0" aria-valuemax="7">{gameWinProgress}%</div>
-          </div>
-        </div>
-      </div>
-      <div className="row py-2">
-        <div className="col">
-          <h3>Required Points ({pointsScored} of {pointsExpected})</h3>
-          <div className="progress fs-5" style={{height: "36px"}}>
-            <div className={pointsScoredClass} role="progressbar" style={{width: `${pointsMadeProgress}%`}} aria-valuenow={pointsScored} aria-valuemin="0" aria-valuemax={pointsExpected}>{pointsMadeProgress}% ({differential})</div>
-          </div>
-
-        </div>
-      </div>
-    </div>
+    <Box>
+      <Box sx={{my:5}}>
+        <Typography align="left" variant="h4" component="h2" gutterBottom>
+          Contract Stipulations
+        </Typography>
+      </Box>
+      <Box sx={{my:5}}>
+        <Box sx={{ display: 'flex', alignItems: 'center'}}>
+          <Typography align="left" variant="h5" component="h3" gutterBottom>
+            Required Wins ({gamesWon} of 7)
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center'}}>
+          <Box sx={{ width: '100%', mr: 1 }}>
+            <LinearProgress
+                sx={{
+                  height: 16
+                }}
+                variant="buffer"
+                value={gameWinProgress}
+                valueBuffer={expectedGameWinProgress}
+                color={gamesColor} />
+          </Box>
+          <Box sx={{ minWidth: 75 }}>
+            <Typography variant="body1" align="right">
+              {gameWinProgress}%
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+      <Box sx={{my:5}}>
+        <Box sx={{ display: 'flex', alignItems: 'center'}}>
+          <Typography align="left" variant="h5" component="h3" gutterBottom>
+            Required Points ({pointsScored} of {pointsExpected})
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center'}}>
+          <Box sx={{ width: '100%', mr: 1 }}>
+            <LinearProgress
+                sx={{
+                  height: 16
+                }}
+                color={pointsScoredColor}
+                variant="buffer"
+                value={pointsMadeProgress}
+                valueBuffer={pointsNeededProgress} />
+          </Box>
+          <Box sx={{ minWidth: 75 }}>
+            <Typography variant="body1" align="right">
+              {pointsMadeProgress}% ({differential})
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 export default ContractStipulations;

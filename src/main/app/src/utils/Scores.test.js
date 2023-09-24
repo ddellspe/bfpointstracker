@@ -327,6 +327,51 @@ test('processScoreData has 4 data points with 2 scores when two games played, la
   expect(actualOutput).toStrictEqual(expectedData);
 });
 
+test('processScoreData when game has been played with no points scored', () => {
+  const rawData = {
+    scores: [
+      {
+        quarter: 2,
+        minutesRemaining: 7,
+        secondsRemaining: 30,
+        gameNum: 1,
+        points: 7
+      },
+      {
+        quarter: 4,
+        minutesRemaining: 6,
+        secondsRemaining: 0,
+        gameNum: 1,
+        points: 7
+      }
+    ],
+    games: [
+      {
+        gameNum: 1,
+        won: true
+      },
+      {
+        gameNum: 2,
+        won: false
+      }
+    ]
+  }
+  const expectedData = [
+    {time: 0, total: 0},
+    {time: 1/3600, total: 0},
+    {time: 0.375, total: 7},
+    {time: 0.9, total: 14},
+    {time: 1, total: 14},
+    {time: 3601/3600, total: 14},
+    {time: 2, total: 14}
+  ]
+
+  const actualOutput = processScoreData(rawData)
+
+  expect(actualOutput.length).toBe(7)
+  expect(actualOutput).toStrictEqual(expectedData);
+});
+
 test('processGameData returns proper structure with no data', () => {
   const rawData = {scores: [], games: []}
 

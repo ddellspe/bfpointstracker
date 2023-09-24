@@ -2,6 +2,7 @@ import { processScoreData, processGameData } from '../utils/Scores';
 import ScoreChartContainer from './ScoreChartContainer';
 import ContractStipulations from './ContractStipulations';
 import React, { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
 
 function StatsSection() {
   const [gamesData, setGamesData] = useState({scores: [], games: []});
@@ -31,7 +32,7 @@ function StatsSection() {
     goal: 25 * Math.ceil(data.time)
   }));
   return (
-    <div className="container">
+    <Box>
       {err &&
         <div className="alert alert-danger" role="alert">
           <p>API responded with an error, data may be stale.</p>
@@ -39,7 +40,7 @@ function StatsSection() {
       }
       <ScoreChartContainer gameData={chartData}/>
       <ContractStipulations gamesData={gameData} scoresData={scoreData} />
-    </div>
+    </Box>
   );
 }
 export default StatsSection;
