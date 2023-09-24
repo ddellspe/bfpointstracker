@@ -3,6 +3,7 @@ import ScoreChartContainer from './ScoreChartContainer';
 import ContractStipulations from './ContractStipulations';
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
+import ReactGA from 'react-ga4';
 
 function StatsSection() {
   const [gamesData, setGamesData] = useState({scores: [], games: []});
@@ -14,6 +15,7 @@ function StatsSection() {
         const response = await fetch('api/gamedata')
         const data = await response.json()
         setGamesData(data);
+        ReactGA.event('dataReload')
         setErr(false);
       } catch (err) {
         setErr(true);
