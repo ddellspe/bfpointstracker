@@ -42,6 +42,7 @@ class SecurityConfig {
           "manifest.json",
           "favicon**",
           "apple-touch-icon-**",
+          "android-chrome-**",
           "robots.txt"
         )
     }
@@ -53,7 +54,7 @@ class SecurityConfig {
       .cors { customizer -> customizer.disable() }
       .csrf { customizer -> customizer.disable() }
       .authorizeHttpRequests { auth ->
-        auth.requestMatchers("/api/gamedata", "/login").permitAll().anyRequest().authenticated()
+        auth.requestMatchers("/api/gamedata").permitAll().anyRequest().authenticated()
       }
       .httpBasic { customizer ->
         customizer.authenticationEntryPoint(userAuthenticationErrorHandler())
