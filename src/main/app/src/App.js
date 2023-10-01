@@ -1,4 +1,5 @@
 import StatsSection from './components/StatsSection';
+import DataButton from './components/DataButton';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -12,6 +13,7 @@ function App() {
         </Typography>
       </Box>
       <StatsSection />
+      <DataButton />
     </Container>
   );
 }

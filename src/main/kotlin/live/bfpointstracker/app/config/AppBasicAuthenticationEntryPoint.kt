@@ -13,7 +13,9 @@ class AppBasicAuthenticationEntryPoint : BasicAuthenticationEntryPoint() {
     response: HttpServletResponse?,
     authException: AuthenticationException?
   ) {
-    response?.addHeader("WWW-Authenticate", "Basic realm=$realmName")
+    if (request?.servletPath != "/session") {
+      response?.addHeader("WWW-Authenticate", "Basic realm=$realmName")
+    }
     response?.status = HttpServletResponse.SC_UNAUTHORIZED
     val writer: PrintWriter? = response?.writer
     writer?.println("HTTP Status 401 - " + authException?.message)

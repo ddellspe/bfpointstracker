@@ -87,7 +87,11 @@ export default function ScoreChart({
             height={yMax}
             stroke="#e0e0e0"
             tickValues={gameValues} />
-          <text x={xMax - 75} y={yMax - 5} fontSize={12}>
+          <text
+            x={xMax - 108}
+            y={yMax - 7}
+            fontSize={16}
+            fontFamily='Roboto, Arial, Helvetica, sans-serif'>
             Games Played
           </text>
           <AxisBottom
@@ -95,9 +99,17 @@ export default function ScoreChart({
             scale={gameScale}
             tickFormat={(value) => Math.round(value)}
             numTicks={maxGame > 5 ? (width > 520 ? maxGame : (Math.ceil(maxGame / 2))) : maxGame}
+            tickLabelProps={{fontFamily: 'Roboto, Arial, Helvetica, sans-serif', fontSize: 12 }}
           />
-          <AxisLeft scale={pointScale} />
-          <text x="-70" y="15" transform="rotate(-90)" fontSize={12}>
+          <AxisLeft
+            scale={pointScale}
+            tickLabelProps={{fontFamily: 'Roboto, Arial, Helvetica, sans-serif', fontSize: 12 }} />
+          <text
+            x="-105"
+            y="19"
+            transform="rotate(-90)"
+            fontSize={16}
+            fontFamily='Roboto, Arial, Helvetica, sans-serif'>
             Points Scored
           </text>
           <Threshold
@@ -123,9 +135,9 @@ export default function ScoreChart({
             curve={curveStepBefore}
             x={(d) => gameScale(time(d)) ?? 0}
             y={(d) => pointScale(goal(d)) ?? 0}
-            stroke="#222"
+            stroke="#555"
             strokeWidth={1.5}
-            strokeOpacity={0.8}
+            strokeOpacity={0.5}
             strokeDasharray="1,2"
           />
           <LinePath
@@ -133,8 +145,8 @@ export default function ScoreChart({
             curve={curveStepAfter}
             x={(d) => gameScale(time(d)) ?? 0}
             y={(d) => pointScale(points(d)) ?? 0}
-            stroke="#222"
-            strokeWidth={1.5}
+            stroke="#000"
+            strokeWidth={2}
           />
         </Group>
       </svg>
