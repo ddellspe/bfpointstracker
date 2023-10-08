@@ -17,6 +17,7 @@ import SportsFootballIcon from '@mui/icons-material/SportsFootballTwoTone';
 import Typography from '@mui/material/Typography';
 
 export default function AdminSection() {
+  const creds = sessionStorage.getItem('auth');
   const [auth, setAuth] = useState(false);
   const [openSpeedDialOptions, setOpenSpeedDialOptions] = useState(false);
   const [openScoresModal, setOpenScoresModal] = useState(false);
@@ -38,17 +39,17 @@ export default function AdminSection() {
     setOpenGamesModal(false);
   };
   useEffect(() => {
-    const checkAuth = async() => {
-      try {
-        const response = await fetch('session').catch();
-        await response.json()
-        setAuth(true);
-      } catch (err) {
-        setAuth(false);
-      }
+    if (creds !== undefined) {
+      fetch('session', {headers: new Headers({'Authorization': 'Basic ' + creds})})
+        .then((response) => {
+          if(!response.ok) {
+            setAuth(false);
+          } else {
+            setAuth(true);
+          }
+        });
     }
-    checkAuth();
-  }, []);
+  }, [creds]);
   return (
     <Box>
       <SpeedDial
@@ -57,7 +58,7 @@ export default function AdminSection() {
         icon={<SpeedDialIcon icon={<GamesIcon />} openIcon={<CloseIcon />} />}
         onClick={toggleDial}
         open={openSpeedDialOptions}
-        hidden={auth}
+        hidden={!auth}
         FabProps={{ color:"info" }}
       >
         <SpeedDialAction
@@ -96,7 +97,7 @@ export default function AdminSection() {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <GamesGrid opened={openGamesModal} />
+          <GamesGrid opened={openGamesModal} creds={creds} />
         </DialogContent>
       </Dialog>
       <Dialog
@@ -124,7 +125,7 @@ export default function AdminSection() {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <ScoresGrid opened={openScoresModal} />
+          <ScoresGrid opened={openScoresModal} creds={creds} />
         </DialogContent>
       </Dialog>
     </Box>

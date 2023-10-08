@@ -10,17 +10,17 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
-export default function GamesGrid({opened}) {
+export default function GamesGrid({opened, creds}) {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect((opened) => {
-    if (opened) {
+  useEffect(() => {
+    if (!opened || creds === undefined) {
       return;
     }
     const getGames = async() => {
       try {
-        const response = await fetch('api/games');
+        const response = await fetch('api/games', {headers: new Headers({'Authorization': 'Basic ' + creds})});
         const data = await response.json();
         setGames(data);
         setLoading(false);
@@ -28,7 +28,7 @@ export default function GamesGrid({opened}) {
       }
     }
     getGames();
-  }, []);
+  }, [opened, creds]);
   if (loading) {
     return (
       <Box sx={{ width: '100%' }}>

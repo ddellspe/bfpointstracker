@@ -9,12 +9,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
-export default function ScoresGrid({opened}) {
+export default function ScoresGrid({opened, creds}) {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect((opened) => {
-    if (opened) {
+  useEffect(() => {
+    if (!opened || creds === undefined) {
       return;
     }
     const getScores = async() => {
@@ -27,7 +27,7 @@ export default function ScoresGrid({opened}) {
       }
     }
     getScores();
-  }, []);
+  }, [opened, creds]);
   if (loading) {
     return (
       <Box sx={{ width: '100%' }}>
