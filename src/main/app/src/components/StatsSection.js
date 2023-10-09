@@ -2,7 +2,7 @@ import { processScoreData, processGameData } from '../utils/Scores';
 import ScoreChartContainer from './ScoreChartContainer';
 import ContractStipulations from './ContractStipulations';
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Alert from '@mui/material/Alert';
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import ReactGA from 'react-ga4';
@@ -38,7 +38,7 @@ function StatsSection() {
   return (
     <Box>
       <Snackbar open={err} autoHideDuration={5000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} >
-         <MuiAlert elevation={6} severity="error" variant="filled">API responded with an error, data may be stale.</MuiAlert>
+         <Alert elevation={6} severity="error" variant="filled">API responded with an error, data may be stale.</Alert>
       </Snackbar>
       <ScoreChartContainer gameData={chartData}/>
       <ContractStipulations gamesData={gameData} scoresData={scoreData} />
