@@ -9,6 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditIcon from '@mui/icons-material/Edit';
+import GameForm from './GameForm';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -19,8 +20,30 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
 export default function GamesGrid({opened, creds, onClose}) {
+  const defaultGame = {"gameNum": 0, "opponent": "", "opponentLogo": "", "date": 1, "won": null};
   const [games, setGames] = useState([]);
+  const [game, setGame] = useState(defaultGame);
   const [loading, setLoading] = useState(false);
+  const [gameDialog, setGameDialog] = useState(false);
+
+  const editGame = (gameNum) => {
+    const selectedGame = games.find(game => game.gameNum === parseInt(gameNum));
+    setGame(selectedGame === undefined ? defaultGame : selectedGame);
+    setTimeout(() => setGameDialog(true), 50)
+  }
+
+  const newGame = () => {
+    editGame(0)
+  }
+
+  const closeGameModal = (success, message) => {
+    if (typeof success === 'boolean') {
+      setGameDialog(false);
+      onClose(success, message);
+    } else {
+      setGameDialog(false);
+    }
+  }
 
   useEffect(() => {
     if (!opened || creds === undefined) {
@@ -78,7 +101,7 @@ export default function GamesGrid({opened, creds, onClose}) {
                     <ListItem
                       key={game.gameNum}
                       secondaryAction={
-                        <IconButton edge='end' aria-label='edit'>
+                        <IconButton edge='end' aria-label='edit' onClick={() => editGame(game.gameNum)}>
                           <EditIcon />
                         </IconButton>
                       }
@@ -104,9 +127,10 @@ export default function GamesGrid({opened, creds, onClose}) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained">
+          <Button variant="contained" onClick={newGame}>
             Add Game
           </Button>
+          <GameForm opened={gameDialog} creds={creds} onClose={closeGameModal} game={game} />
         </DialogActions>
       </Dialog>
     )

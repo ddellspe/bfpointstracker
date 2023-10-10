@@ -56,9 +56,160 @@ class ScoreServiceTest {
   }
 
   @Test
+  fun whenCreateScore_hasTooHighMinutes_thenThrowsException() {
+    every { score.id } returns 0L
+    every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 15
+    every { gameRepository.findByIdOrNull(2L) } returns game
+    every { scoreRepository.save(score) } returns score
+
+    val exception: IllegalArgumentException =
+      assertThrows<IllegalArgumentException> { scoreService.createScore(score) }
+
+    verify(exactly = 1) { score.id }
+    verify(exactly = 2) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
+
+    assertEquals(
+      "Game with gameNum=2 has an invalid number of minutes remaining: 15 must be " +
+        "between 0 and 14.",
+      exception.message
+    )
+  }
+
+  @Test
+  fun whenCreateScore_hasTooLowMinutes_thenThrowsException() {
+    every { score.id } returns 0L
+    every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns -1
+    every { gameRepository.findByIdOrNull(2L) } returns game
+    every { scoreRepository.save(score) } returns score
+
+    val exception: IllegalArgumentException =
+      assertThrows<IllegalArgumentException> { scoreService.createScore(score) }
+
+    verify(exactly = 1) { score.id }
+    verify(exactly = 2) { score.gameNum }
+    verify(exactly = 3) { score.minutesRemaining }
+    verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
+
+    assertEquals(
+      "Game with gameNum=2 has an invalid number of minutes remaining: -1 must be " +
+        "between 0 and 14.",
+      exception.message
+    )
+  }
+
+  @Test
+  fun whenCreateScore_hasTooHighSeconds_thenThrowsException() {
+    every { score.id } returns 0L
+    every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 0
+    every { score.secondsRemaining } returns 60
+    every { gameRepository.findByIdOrNull(2L) } returns game
+    every { scoreRepository.save(score) } returns score
+
+    val exception: IllegalArgumentException =
+      assertThrows<IllegalArgumentException> { scoreService.createScore(score) }
+
+    verify(exactly = 1) { score.id }
+    verify(exactly = 2) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 2) { score.secondsRemaining }
+    verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
+
+    assertEquals(
+      "Game with gameNum=2 has an invalid number of seconds remaining: 60 must be " +
+        "between 0 and 59.",
+      exception.message
+    )
+  }
+
+  @Test
+  fun whenCreateScore_hasTooLowSeconds_thenThrowsException() {
+    every { score.id } returns 0L
+    every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 0
+    every { score.secondsRemaining } returns -1
+    every { gameRepository.findByIdOrNull(2L) } returns game
+    every { scoreRepository.save(score) } returns score
+
+    val exception: IllegalArgumentException =
+      assertThrows<IllegalArgumentException> { scoreService.createScore(score) }
+
+    verify(exactly = 1) { score.id }
+    verify(exactly = 2) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 3) { score.secondsRemaining }
+    verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
+
+    assertEquals(
+      "Game with gameNum=2 has an invalid number of seconds remaining: -1 must be " +
+        "between 0 and 59.",
+      exception.message
+    )
+  }
+
+  @Test
+  fun whenCreateScore_hasTooHighQuarter_thenThrowsException() {
+    every { score.id } returns 0L
+    every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 0
+    every { score.secondsRemaining } returns 0
+    every { score.quarter } returns 5
+    every { gameRepository.findByIdOrNull(2L) } returns game
+    every { scoreRepository.save(score) } returns score
+
+    val exception: IllegalArgumentException =
+      assertThrows<IllegalArgumentException> { scoreService.createScore(score) }
+
+    verify(exactly = 1) { score.id }
+    verify(exactly = 2) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 2) { score.secondsRemaining }
+    verify(exactly = 2) { score.quarter }
+    verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
+
+    assertEquals(
+      "Game with gameNum=2 has an invalid quarter: 5 must be between 1 and 4.",
+      exception.message
+    )
+  }
+
+  @Test
+  fun whenCreateScore_hasTooLowQuarter_thenThrowsException() {
+    every { score.id } returns 0L
+    every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 0
+    every { score.secondsRemaining } returns 0
+    every { score.quarter } returns 0
+    every { gameRepository.findByIdOrNull(2L) } returns game
+    every { scoreRepository.save(score) } returns score
+
+    val exception: IllegalArgumentException =
+      assertThrows<IllegalArgumentException> { scoreService.createScore(score) }
+
+    verify(exactly = 1) { score.id }
+    verify(exactly = 2) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 2) { score.secondsRemaining }
+    verify(exactly = 3) { score.quarter }
+    verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
+
+    assertEquals(
+      "Game with gameNum=2 has an invalid quarter: 0 must be between 1 and 4.",
+      exception.message
+    )
+  }
+
+  @Test
   fun whenCreateScore_hasNoExistingScore_hasValidGame_thenReturnScore() {
     every { score.id } returns 0L
     every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 0
+    every { score.secondsRemaining } returns 0
+    every { score.quarter } returns 4
     every { gameRepository.findByIdOrNull(2L) } returns game
     every { scoreRepository.save(score) } returns score
 
@@ -66,6 +217,9 @@ class ScoreServiceTest {
 
     verify(exactly = 1) { score.id }
     verify(exactly = 1) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 2) { score.secondsRemaining }
+    verify(exactly = 2) { score.quarter }
     verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
 
     assertEquals(score, result)
@@ -75,6 +229,9 @@ class ScoreServiceTest {
   fun whenCreateScore_hasNoExistingScore_withScoreId_hasValidGame_thenReturnScore() {
     every { score.id } returns 1L
     every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 0
+    every { score.secondsRemaining } returns 0
+    every { score.quarter } returns 4
     every { scoreRepository.findByIdOrNull(1L) } returns null
     every { gameRepository.findByIdOrNull(2L) } returns game
     every { scoreRepository.save(score) } returns score
@@ -83,6 +240,9 @@ class ScoreServiceTest {
 
     verify(exactly = 2) { score.id }
     verify(exactly = 1) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 2) { score.secondsRemaining }
+    verify(exactly = 2) { score.quarter }
     verify(exactly = 1) { scoreRepository.findByIdOrNull(1L) }
     verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
 
@@ -175,6 +335,9 @@ class ScoreServiceTest {
   fun whenUpdateScore_hasExistingScore_hasExistingGame_thenReturnScore() {
     every { score.id } returns 1L
     every { score.gameNum } returns 2L
+    every { score.minutesRemaining } returns 0
+    every { score.secondsRemaining } returns 0
+    every { score.quarter } returns 4
     every { scoreRepository.findByIdOrNull(1L) } returns score
     every { gameRepository.findByIdOrNull(2L) } returns game
     every { scoreRepository.save(score) } returns score
@@ -183,6 +346,9 @@ class ScoreServiceTest {
 
     verify(exactly = 2) { score.id }
     verify(exactly = 1) { score.gameNum }
+    verify(exactly = 2) { score.minutesRemaining }
+    verify(exactly = 2) { score.secondsRemaining }
+    verify(exactly = 2) { score.quarter }
     verify(exactly = 1) { scoreRepository.findByIdOrNull(1L) }
     verify(exactly = 1) { gameRepository.findByIdOrNull(2L) }
     verify(exactly = 1) { scoreRepository.save(score) }
