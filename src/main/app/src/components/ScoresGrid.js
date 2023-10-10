@@ -33,8 +33,7 @@ export default function ScoresGrid({opened, creds, onClose}) {
   }
 
   const newScore = () => {
-    setScore(defaultScore);
-    setScoreDialog(true);
+    editScore(0);
   }
 
   const closeScoreModal = (success, message) => {

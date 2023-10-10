@@ -77,8 +77,6 @@ export default function ScoreForm({opened, creds, onClose, score}) {
   };
 
   useEffect(() => {
-    console.log("USE EFFECT SCORE FORM");
-    console.log(score);
     setMinutesRemaining(score.minutesRemaining);
     setSecondsRemaining(score.secondsRemaining);
     setId(score.id);
@@ -103,7 +101,7 @@ export default function ScoreForm({opened, creds, onClose, score}) {
       <DialogTitle>
         <Grid container spacing={2} justifyContent="center" alignItems="center">
           <Grid item>
-            <Typography id="games-modal-title" variant="h5" component="h3">
+            <Typography id="score-modal-title" variant="h5" component="h3">
               Score
             </Typography>
           </Grid>
@@ -191,7 +189,7 @@ export default function ScoreForm({opened, creds, onClose, score}) {
             type="submit"
             variant="contained"
           >
-            Submit
+            {score.id === 0 ? 'Create' : 'Update'}
           </Button>
         </Box>
       </DialogActions>

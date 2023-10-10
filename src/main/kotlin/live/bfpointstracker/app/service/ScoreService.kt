@@ -22,6 +22,7 @@ class ScoreService(var scoreRepository: ScoreRepository, var gameRepository: Gam
         "Game with gameNum=${score.gameNum} does not exist in the database, " +
           "please be sure to add the game first."
       )
+    validateScore(score)
     return scoreRepository.save(score)
   }
 
@@ -38,7 +39,29 @@ class ScoreService(var scoreRepository: ScoreRepository, var gameRepository: Gam
         "Game with gameNum=${score.gameNum} does not exist in the database, " +
           "please be sure to add the game first."
       )
+    validateScore(score)
     return scoreRepository.save(score)
+  }
+
+  private fun validateScore(score: Score) {
+    if (score.minutesRemaining > 14 || score.minutesRemaining < 0) {
+      throw IllegalArgumentException(
+        "Game with gameNum=${score.gameNum} has an invalid number of minutes remaining: " +
+          "${score.minutesRemaining} must be between 0 and 14."
+      )
+    }
+    if (score.secondsRemaining > 59 || score.secondsRemaining < 0) {
+      throw IllegalArgumentException(
+        "Game with gameNum=${score.gameNum} has an invalid number of seconds remaining: " +
+          "${score.secondsRemaining} must be between 0 and 59."
+      )
+    }
+    if (score.quarter > 4 || score.quarter < 1) {
+      throw IllegalArgumentException(
+        "Game with gameNum=${score.gameNum} has an invalid quarter: ${score.quarter} must be " +
+          "between 1 and 4."
+      )
+    }
   }
 
   fun getScore(id: Long): Score {
