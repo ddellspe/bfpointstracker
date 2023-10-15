@@ -20,7 +20,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 
 export default function GamesGrid({opened, creds, onClose}) {
-  const defaultGame = {"gameNum": 0, "opponent": "", "opponentLogo": "", "date": 1, "won": null};
+  const defaultGame = {"gameNum": 0, "opponent": "", "opponentLogo": "", "date": new Date().toISOString(), "won": null};
   const [games, setGames] = useState([]);
   const [game, setGame] = useState(defaultGame);
   const [loading, setLoading] = useState(false);

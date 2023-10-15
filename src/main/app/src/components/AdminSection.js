@@ -30,16 +30,16 @@ export default function AdminSection() {
     setDataSent("");
   }
   const handleOpenScoresModal = () => {
-    setOpenScoresModal(true);
     setOpenSpeedDialOptions(false);
     setOpenGamesModal(false);
     setOpenLoginModal(false);
+    setOpenScoresModal(true);
   };
   const handleOpenGamesModal = () => {
-    setOpenGamesModal(true);
     setOpenSpeedDialOptions(false);
     setOpenScoresModal(false);
     setOpenLoginModal(false);
+    setOpenGamesModal(true);
   };
   const handleCloseAll = (success, message) => {
     if (typeof success === "boolean") {
@@ -53,10 +53,10 @@ export default function AdminSection() {
     setOpenLoginModal(false);
   };
   const handleOpenLoginModal = () => {
-    setOpenLoginModal(true);
     setOpenSpeedDialOptions(false);
     setOpenScoresModal(false);
     setOpenGamesModal(false);
+    setOpenLoginModal(true);
   };
   const logout = () => {
     sessionStorage.removeItem('auth');

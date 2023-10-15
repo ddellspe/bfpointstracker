@@ -22,6 +22,7 @@ import Typography from '@mui/material/Typography';
 export default function ScoresGrid({opened, creds, onClose}) {
   const defaultScore = {"id": 0, "gameNum": 1, "points": 7, "quarter": 1, "minutesRemaining": 15, "secondsRemaining": 0};
   const [scores, setScores] = useState([]);
+  const [gameNumMax, setGameNumMax] = useState(12);
   const [score, setScore] = useState(defaultScore);
   const [loading, setLoading] = useState(false);
   const [scoreDialog, setScoreDialog] = useState(false);
@@ -59,7 +60,16 @@ export default function ScoresGrid({opened, creds, onClose}) {
       } catch (err) {
       }
     }
+    const getGames = async() => {
+      try {
+        const response = await fetch('api/games', {headers: new Headers({'Authorization': 'Basic ' + creds})});
+        const data = await response.json();
+        setGameNumMax(data.length);
+      } catch (err) {
+      }
+    }
     getScores();
+    getGames();
   }, [opened, creds]);
   if (loading) {
     return (
@@ -130,7 +140,7 @@ export default function ScoresGrid({opened, creds, onClose}) {
           <Button variant="contained" onClick={newScore}>
             Add Score
           </Button>
-          <ScoreForm opened={scoreDialog} creds={creds} onClose={closeScoreModal} score={score} />
+          <ScoreForm opened={scoreDialog} creds={creds} onClose={closeScoreModal} score={score} gameNumMax={gameNumMax} />
         </DialogActions>
       </Dialog>
     )

@@ -16,7 +16,7 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-export default function ScoreForm({opened, creds, onClose, score}) {
+export default function ScoreForm({opened, creds, onClose, score, gameNumMax}) {
   const [id, setId] = useState(score.id);
   const [gameNum, setGameNum] = useState(score.gameNum);
   const [quarter, setQuarter] = useState(score.quarter);
@@ -44,7 +44,7 @@ export default function ScoreForm({opened, creds, onClose, score}) {
       setGameNum(event.target.value);
     } else if (event.target.name === 'quarter') {
       setQuarter(event.target.value);
-    } else if (event.target.name === 'points') {
+    } else {
       setPoints(event.target.value);
     }
   }
@@ -61,7 +61,9 @@ export default function ScoreForm({opened, creds, onClose, score}) {
     .then((resp) => {
       if (resp.ok) {
         const action = score.id === 0 ? "created" : "updated"
-        onClose(true, `Score ${action} with points of ${object.points} with ${('00' + object.minutesRemaining).slice(-2)}:${('00' + object.secondsRemaining).slice(-2)} left in quarter ${object.quarter} for game ${object.gameNum}`)
+        const timeLeft = `${('00' + object.minutesRemaining).slice(-2)}:${('00' + object.secondsRemaining).slice(-2)}`
+        const msg = `Score ${action} with points of ${object.points} with ${timeLeft} left in quarter ${object.quarter} for game ${object.gameNum}`;
+        onClose(true, msg);
         return true;
       } else {
         return resp.json();
@@ -69,7 +71,6 @@ export default function ScoreForm({opened, creds, onClose, score}) {
     })
     .then(data => {
       if (typeof data === "object") {
-        console.log(data)
         setShowError(true);
         setDataSent(data.errors.errorMessage);
       }
@@ -120,7 +121,7 @@ export default function ScoreForm({opened, creds, onClose, score}) {
               label="Game Number"
               name="gameNum"
             >
-              {[...Array(13).keys()].map((num) => (
+              {[...Array(gameNumMax).keys()].map((num) => (
                 <MenuItem key={num + 1} value={num + 1}>{num + 1}</MenuItem>
               ))}
             </Select>
@@ -162,8 +163,11 @@ export default function ScoreForm({opened, creds, onClose, score}) {
           />
         </Box>
         <Box sx={{ width: '100%', my: 1 }}>
+          <Typography id="score-slider" gutterBottom>
+            Points
+          </Typography>
           <Slider
-            aria-label="Restricted values"
+            aria-labelledby="score-slider"
             value={points}
             marks={pointOptions}
             step={null}
