@@ -1,7 +1,7 @@
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import React from 'react';
-import StatsSection from './StatsSection';
+import StatsSection from '../components/StatsSection';
 
 const mockScoreChartContainer = jest.fn();
 const mockContractStipulations = jest.fn();
@@ -16,12 +16,12 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-jest.mock("./ScoreChartContainer", () => (props) => {
+jest.mock("../components/ScoreChartContainer", () => (props) => {
   mockScoreChartContainer(props);
   return <div>score chart</div>;
 });
 
-jest.mock("./ContractStipulations", () => (props) => {
+jest.mock("../components/ContractStipulations", () => (props) => {
   mockContractStipulations(props);
   return <div>contract stipulation</div>;
 });

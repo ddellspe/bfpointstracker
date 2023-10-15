@@ -24,7 +24,7 @@ export default function ScoresGrid({opened, creds, onClose}) {
   const [scores, setScores] = useState([]);
   const [gameNumMax, setGameNumMax] = useState(12);
   const [score, setScore] = useState(defaultScore);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [scoreDialog, setScoreDialog] = useState(false);
 
   const editScore = (scoreId) => {
@@ -73,9 +73,36 @@ export default function ScoresGrid({opened, creds, onClose}) {
   }, [opened, creds]);
   if (loading) {
     return (
-      <Box sx={{ width: '100%' }}>
-        <LinearProgress />
-      </Box>
+      <Dialog
+        open={opened}
+        onClose={onClose}
+        PaperProps={{
+          sx: {
+            position: 'fixed',
+            m: '0 auto',
+          },
+        }}
+      >
+        <DialogTitle>
+          <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item>
+              <Typography id="games-modal-title" variant="h4" component="h2">
+                Scores Listing
+              </Typography>
+            </Grid>
+            <Grid ml="auto" item>
+              <IconButton aria-label="close" onClick={onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: '100%' }}>
+            <LinearProgress />
+          </Box>
+        </DialogContent>
+      </Dialog>
     );
   } else {
     return (

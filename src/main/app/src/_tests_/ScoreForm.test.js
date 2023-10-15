@@ -2,7 +2,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import ScoreForm from './ScoreForm';
+import ScoreForm from '../components/ScoreForm';
 
 beforeEach(() => {
   fetch.resetMocks();

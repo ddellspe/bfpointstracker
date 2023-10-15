@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import ContractStipulations from './ContractStipulations';
+import ContractStipulations from '../components/ContractStipulations';
 
 
 const mockLinearProgress = jest.fn();

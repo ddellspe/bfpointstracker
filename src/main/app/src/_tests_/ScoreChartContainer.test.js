@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import ScoreChartContainer from './ScoreChartContainer';
+import ScoreChartContainer from '../components/ScoreChartContainer';
 import ResizeObserver from 'resize-observer-polyfill';
 
 window.ResizeObserver = ResizeObserver;

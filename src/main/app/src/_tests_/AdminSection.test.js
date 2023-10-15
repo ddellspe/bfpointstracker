@@ -2,7 +2,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import AdminSection from './AdminSection';
+import AdminSection from '../components/AdminSection';
 
 beforeEach(() => {
   fetch.resetMocks();
@@ -17,17 +17,17 @@ const mockScoresGrid = jest.fn();
 const mockGamesGrid = jest.fn();
 const mockLoginForm = jest.fn();
 
-jest.mock("./GamesGrid", () => (props) => {
+jest.mock("../components/GamesGrid", () => (props) => {
   mockGamesGrid(props);
   return <div>games grid</div>;
 });
 
-jest.mock("./ScoresGrid", () => (props) => {
+jest.mock("../components/ScoresGrid", () => (props) => {
   mockScoresGrid(props);
   return <div>scores grid</div>;
 });
 
-jest.mock("./LoginForm", ()  => (props) => {
+jest.mock("../components/LoginForm", ()  => (props) => {
   mockLoginForm(props);
   return <div>login form</div>;
 })
