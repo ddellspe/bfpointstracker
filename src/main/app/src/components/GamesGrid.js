@@ -23,7 +23,7 @@ export default function GamesGrid({opened, creds, onClose}) {
   const defaultGame = {"gameNum": 0, "opponent": "", "opponentLogo": "", "date": new Date().toISOString(), "won": null};
   const [games, setGames] = useState([]);
   const [game, setGame] = useState(defaultGame);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [gameDialog, setGameDialog] = useState(false);
 
   const editGame = (gameNum) => {
@@ -63,9 +63,36 @@ export default function GamesGrid({opened, creds, onClose}) {
   }, [opened, creds]);
   if (loading) {
     return (
-      <Box sx={{ width: '100%' }}>
-        <LinearProgress />
-      </Box>
+      <Dialog
+        open={opened}
+        onClose={onClose}
+        PaperProps={{
+          sx: {
+            position: 'fixed',
+            m: '0 auto',
+          },
+        }}
+      >
+        <DialogTitle>
+          <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item>
+              <Typography id="games-modal-title" variant="h4" component="h2">
+                Games Listing
+              </Typography>
+            </Grid>
+            <Grid ml="auto" item>
+              <IconButton aria-label="close" onClick={onClose}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ width: '100%' }}>
+            <LinearProgress />
+          </Box>
+        </DialogContent>
+      </Dialog>
     );
   } else {
     return (

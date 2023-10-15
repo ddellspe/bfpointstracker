@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import GameForm from './GameForm';
+import GameForm from '../components/GameForm';
 
 beforeEach(() => {
   fetch.resetMocks();

@@ -1,4 +1,4 @@
-import { getTime, compareScores, processScoreData, processGameData } from './Scores';
+import { getTime, compareScores, processScoreData, processGameData } from '../utils/Scores';
 
 test('getTime should return 0 when quarter is 1, minutes remaining is 15 and seconds remaining is 0 and game is 1', () => {
   const score = {quarter: 1, minutesRemaining: 15 , secondsRemaining: 0, gameNum: 1}

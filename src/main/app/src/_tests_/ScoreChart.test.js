@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import ScoreChart from './ScoreChart';
+import ScoreChart from '../components/ScoreChart';
 
 test('ScoreChart shows when width is greater than 10', () => {
   const data = [

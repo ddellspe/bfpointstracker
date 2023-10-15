@@ -66,6 +66,14 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
       "!src/index.js"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
+      }
+    }
   }
 }

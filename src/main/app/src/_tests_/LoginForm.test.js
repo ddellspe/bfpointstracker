@@ -2,7 +2,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import LoginForm from './LoginForm';
+import LoginForm from '../components/LoginForm';
 
 beforeEach(() => {
   fetch.resetMocks();
