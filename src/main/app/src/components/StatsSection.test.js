@@ -9,7 +9,12 @@ const mockContractStipulations = jest.fn();
 beforeEach(() => {
   fetchMock.resetMocks();
   jest.resetAllMocks();
+  jest.useFakeTimers();
 })
+
+afterEach(() => {
+  jest.useRealTimers();
+});
 
 jest.mock("./ScoreChartContainer", () => (props) => {
   mockScoreChartContainer(props);
@@ -27,7 +32,6 @@ test('calls come through when API call fails', async () => {
   await act(async () =>{
     render(<StatsSection />);
   });
-
   expect(await screen.findByText('API responded with an error, data may be stale.')).toBeInTheDocument();
   expect(mockScoreChartContainer).toHaveBeenCalledWith({
     gameData: [
@@ -42,6 +46,10 @@ test('calls come through when API call fails', async () => {
     gamesData: {wins: [], losses: [], played: [], all: []},
     scoresData: [{time: 0, total: 0}]
   });
+  act(() => {
+    jest.advanceTimersByTime(30000);
+  })
+  expect(await screen.findByText('API responded with an error, data may be stale.')).toBeInTheDocument();
 });
 
 test('calls come through when API call succeeds', async () => {

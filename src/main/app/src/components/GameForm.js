@@ -32,7 +32,7 @@ export default function GameForm({opened, creds, onClose, game}) {
   const [date, setDate] = useState(dayjs.utc(game.date));
   const [opponent, setOpponent] = useState(game.opponent);
   const [opponentLogo, setOpponentLogo] = useState(game.opponentLogo);
-  const [won, setWon] = useState(game.won);
+  const [won, setWon] = useState(game.won === null ? "null" : game.won);
   const [showError, setShowError] = useState(false);
   const [dataSent, setDataSent] = useState("");
   const killAlert = () => {
@@ -46,10 +46,8 @@ export default function GameForm({opened, creds, onClose, game}) {
     {value: "null", label: "Not Complete"}
   ];
 
-  const handleChange = (event) => {
-    if (event.target.name === 'won') {
-      setWon(event.target.value);
-    }
+  const handleWon = (event) => {
+     setWon(event.target.value);
   }
 
   const setGame = (event) => {
@@ -75,7 +73,6 @@ export default function GameForm({opened, creds, onClose, game}) {
     })
     .then(data => {
       if (typeof data === "object") {
-        console.log(data)
         setShowError(true);
         setDataSent(data.errors.errorMessage);
       }
@@ -120,7 +117,7 @@ export default function GameForm({opened, creds, onClose, game}) {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box sx={{ width: '100%', my: 1 }}>
             <TextField
-              label="Game Number"
+              label="Number"
               required
               name="gameNum"
               id="gameNum"
@@ -135,7 +132,7 @@ export default function GameForm({opened, creds, onClose, game}) {
               onChange={setDate}
               id="date"
               name="date"
-              label="date"
+              label="Date"
               sx={{ mr: 1, width: '100%' }}
             />
           </Box>
@@ -166,7 +163,7 @@ export default function GameForm({opened, creds, onClose, game}) {
                 labelId="wonLabel"
                 id="won"
                 value={won}
-                onChange={handleChange}
+                onChange={handleWon}
                 label="Result"
                 name="won"
               >

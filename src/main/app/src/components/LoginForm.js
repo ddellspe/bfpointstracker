@@ -105,7 +105,7 @@ export default function LoginForm({opened, onClose}) {
             type="submit"
             variant="contained"
           >
-            Login
+            Log In
           </Button>
         </Box>
       </DialogActions>
