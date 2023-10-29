@@ -31,14 +31,29 @@ const UPDATE_SCORE =
     "secondsRemaining": 59,
     "gameNum": 2,
     "points": 7
-  }
+  };
+const GAMES_LIST =
+  [
+    {"gameNum": 1, "opponent": "Utah State"},
+    {"gameNum": 2, "opponent": "Iowa State"},
+    {"gameNum": 3, "opponent": "Western Michigan"},
+    {"gameNum": 4, "opponent": "Penn State"},
+    {"gameNum": 5, "opponent": "Michigan State"},
+    {"gameNum": 6, "opponent": "Purdue"},
+    {"gameNum": 7, "opponent": "Wisconsin"},
+    {"gameNum": 8, "opponent": "Minnesota"},
+    {"gameNum": 9, "opponent": "Northwestern"},
+    {"gameNum": 10, "opponent": "Rutgers"},
+    {"gameNum": 11, "opponent": "Illinois"},
+    {"gameNum": 12, "opponent": "Nebraska"}
+  ]
 
 test('when opened, dialog shows', () => {
   const opened = true
   const creds = "creds"
   const score = DEFAULT_SCORE
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   expect(screen.getByText(/Score/i)).toBeInTheDocument();
 });
@@ -48,7 +63,7 @@ test('when not opened, dialog does not show', () => {
   const creds = "creds"
   const score = DEFAULT_SCORE
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   expect(screen.queryByText(/Score/i)).not.toBeInTheDocument();
 });
@@ -58,11 +73,11 @@ test('when game number changed, onChange called', async () => {
   const creds = "creds"
   const score = DEFAULT_SCORE
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   expect(await screen.findByLabelText(/Game/)).toBeInTheDocument();
 
-  const gameNumEl = await screen.findByLabelText(/2/);
+  const gameNumEl = await screen.findByLabelText(/Iowa State/);
 
   expect(gameNumEl).toBeInTheDocument();
   act(() => {
@@ -71,9 +86,9 @@ test('when game number changed, onChange called', async () => {
   const optionsPopupEl = await screen.findByRole("listbox");
 
   act(() => {
-    userEvent.click(within(optionsPopupEl).getByText(/10/));
+    userEvent.click(within(optionsPopupEl).getByText(/Minnesota/));
   })
-  expect(await screen.findByLabelText(/10/)).toBeInTheDocument();
+  expect(await screen.findByLabelText(/Minnesota/)).toBeInTheDocument();
 });
 
 test('when quarter changed, onChange called', async () => {
@@ -81,7 +96,7 @@ test('when quarter changed, onChange called', async () => {
   const creds = "creds"
   const score = DEFAULT_SCORE
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   expect(await screen.findByLabelText(/Quarter/)).toBeInTheDocument();
 
@@ -104,7 +119,7 @@ test('when points changed, onChange called', async () => {
   const creds = "creds"
   const score = DEFAULT_SCORE
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   const slider = await screen.findByRole('slider', {value: /1/});
   expect(slider).toBeInTheDocument();
@@ -122,7 +137,7 @@ test('when score submitted throws error, display error then hide error', async (
   const score = DEFAULT_SCORE
   fetch.mockResolvedValueOnce({ok: false, json: () => {return {errors: {errorMessage: "Error Message"}}}});
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   const submitButton = await screen.findByText(/Create/);
   expect(submitButton).toBeInTheDocument();
@@ -145,7 +160,7 @@ test('when score create submitted success calls onClose', async () => {
   const score = DEFAULT_SCORE
   fetch.mockResolvedValueOnce({ok: true});
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   const submitButton = await screen.findByText(/Create/);
   expect(submitButton).toBeInTheDocument();
@@ -161,7 +176,7 @@ test('when score update submitted success calls onClose', async () => {
   const score = UPDATE_SCORE
   fetch.mockResolvedValueOnce({ok: true});
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   const submitButton = await screen.findByText(/Update/);
   expect(submitButton).toBeInTheDocument();
@@ -177,7 +192,7 @@ test('when cancel clicked onClose called', async () => {
   const score = UPDATE_SCORE
   fetch.mockResolvedValueOnce({ok: true});
 
-  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} gameNumMax={10} />)
+  render(<ScoreForm opened={opened} creds={creds} onClose={onClose} score={score} games={GAMES_LIST} />)
 
   const cancelButton = await screen.findByText(/Cancel/);
   expect(cancelButton).toBeInTheDocument();

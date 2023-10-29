@@ -16,7 +16,7 @@ import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-export default function ScoreForm({opened, creds, onClose, score, gameNumMax}) {
+export default function ScoreForm({opened, creds, onClose, score, games}) {
   const [id, setId] = useState(score.id);
   const [gameNum, setGameNum] = useState(score.gameNum);
   const [quarter, setQuarter] = useState(score.quarter);
@@ -121,8 +121,8 @@ export default function ScoreForm({opened, creds, onClose, score, gameNumMax}) {
               label="Game Number"
               name="gameNum"
             >
-              {[...Array(gameNumMax).keys()].map((num) => (
-                <MenuItem key={num + 1} value={num + 1}>{num + 1}</MenuItem>
+              {games.map((game) => (
+                <MenuItem key={game.gameNum} value={game.gameNum}>{game.opponent}</MenuItem>
               ))}
             </Select>
           </FormControl>
