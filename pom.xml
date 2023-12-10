@@ -16,45 +16,46 @@
     <properties>
         <frontend-maven-plugin.version>1.13.4</frontend-maven-plugin.version>
         <frontend-src-dir>${project.basedir}/src/main/app</frontend-src-dir>
-        <jacoco.version>0.8.8</jacoco.version>
+        <jacoco.version>0.8.11</jacoco.version>
         <java.version>17</java.version>
         <jib-maven-plugin.version>3.3.1</jib-maven-plugin.version>
-        <kotlin.version>1.9.10</kotlin.version>
+        <kotlin.version>1.9.21</kotlin.version>
         <maven-assembly-plugin.version>3.6.0</maven-assembly-plugin.version>
         <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
-        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
         <maven-deploy-plugin.version>3.0.0</maven-deploy-plugin.version>
-        <maven-enforcer-plugin.version>3.2.1</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
         <maven-install-plugin.version>3.1.0</maven-install-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <maven-release-plugin.version>3.0.0-M4</maven-release-plugin.version>
         <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
         <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.2.2</maven-surefire-plugin.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <node.version>20.9.0</node.version>
+        <node.version>20.10.0</node.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sortpom-maven-plugin.version>3.2.1</sortpom-maven-plugin.version>
+        <sortpom-maven-plugin.version>3.3.0</sortpom-maven-plugin.version>
         <spotless-maven-plugin.version>2.40.0</spotless-maven-plugin.version>
-        <spring-boot.version>3.1.3</spring-boot.version>
-        <versions-maven-plugin.version>2.15.0</versions-maven-plugin.version>
+        <spring-boot.version>3.2.0</spring-boot.version>
+        <springdoc.version>2.3.0</springdoc.version>
+        <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.15.2</version>
+                <version>2.16.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-bom</artifactId>
-                <version>2.20.0</version>
+                <version>2.22.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -68,7 +69,21 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.10.0</version>
+                <version>5.10.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi</artifactId>
+                <version>${springdoc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -81,31 +96,6 @@
                 <groupId>com.ninja-squad</groupId>
                 <artifactId>springmockk</artifactId>
                 <version>4.0.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>2.2.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-jpa</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-security</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>${spring-boot.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
